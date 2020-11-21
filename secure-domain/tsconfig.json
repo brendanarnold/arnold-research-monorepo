@@ -1,8 +1,12 @@
 {
+  "exclude": [
+    "node_modules"
+  ],
   "compilerOptions": {
     "target": "es5",
     "module": "commonjs",
     "outDir": "build",
-    "sourceMap": true
+    "sourceMap": true,
+    "resolveJsonModule": true
   }
 }
