@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: "devpass123"
+    ports:
+      - "5432:5432"
+    # volumes:
+    #   - /var/postgresql/data:/var/lib/postgresql/data
+    networks:
+      - postgresql
+
+  pgadmin4:
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "brendanarnold@gmail.com"
+      PGADMIN_DEFAULT_PASSWORD: "test1234"
+    ports:
+      - "8081:80"
+    depends_on:
+      - db
+    networks:
+      - postgresql
+
+networks:
+  postgresql:
+    driver: bridge
