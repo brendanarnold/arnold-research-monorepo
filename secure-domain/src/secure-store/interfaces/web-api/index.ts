@@ -1,8 +1,8 @@
 
 import * as express from 'express'
 import { AddressInfo } from 'net'
-import infoRouter from './common/routes/info'
-import { Monitor } from './monitor'
+import { Monitor } from '../../../monitor'
+import infoRouter from './routes/info'
 
 
 const monitor = new Monitor()

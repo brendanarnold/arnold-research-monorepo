@@ -7,6 +7,8 @@ A secure, compliant and performant platform for privacy focused services
 
 Developed with Node v14.3.0, NPM v6.14.5
 
+Git is required to build
+
 ### Start Postgres
 
 ```
