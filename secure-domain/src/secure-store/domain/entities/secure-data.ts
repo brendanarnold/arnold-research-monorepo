@@ -1,5 +1,5 @@
 
-import { decryptAes } from '../../utils/encryption'
+import { decryptAes } from '../../../shared/utils/encryption'
 
 export enum GdprDataType {
   Anonymised = 'ANONYMISED',
@@ -8,12 +8,27 @@ export enum GdprDataType {
   SensitivePersonal = 'SENSITIVE_PERSONAL'
 }
 
-
+export enum GdprLifetime {
+  Transient = 'TRANSIENT',
+  Persistent = 'PERSISTENT'
+}
 
 export class GdprPolicy {
   dataType: GdprDataType
   // Lifetime in seconds
-  lifetimeSeconds: number
+  lifetimeSeconds: (GdprLifetime | number)
+
+  constructor (dataType: GdprDataType, lifetimeSeconds: (GdprLifetime | number)) {
+    this.dataType = dataType
+    this.lifetimeSeconds = lifetimeSeconds
+  }
+
+  toPlainObject () {
+    return {
+      dataType: this.dataType,
+      lifetimeSeconds: this.lifetimeSeconds
+    }
+  }
 }
 
 export type Storable = object | object[] | string | string[] | number | number[] | null | undefined

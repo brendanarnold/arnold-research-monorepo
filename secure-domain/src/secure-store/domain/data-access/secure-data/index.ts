@@ -1,9 +1,9 @@
 
-import { encryptAes, decryptAes } from '../../../utils/encryption'
+import { encryptAes, decryptAes } from '../../../../shared/utils/encryption'
 import * as db from '../database'
 import * as uuid from 'uuid'
 import { SecureData, Storable, GdprPolicy } from '../../entities/secure-data'
-import { isNullOrUndefined } from '../../../utils/types'
+import { isNullOrUndefined } from '../../../../shared/utils/types'
 
 
 export const create = async (obj: Storable, gdprPolicy: GdprPolicy) => {

@@ -1,0 +1,6 @@
+{
+	"Hello": "Hello",
+	"Minimum length is {{ length }} characters": "Minimum length is {{ length }} characters",
+	"Maximum length is {{ length }} characters": "Maximum length is {{ length }} characters",
+	"Not a valid email address": "Not a valid email address"
+}

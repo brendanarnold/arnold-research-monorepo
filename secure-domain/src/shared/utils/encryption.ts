@@ -1,6 +1,6 @@
 
 import * as crypto from 'crypto'
-import * as config from '../config'
+import * as config from '../../secure-store/config'
 
 export const encryptAes = (value: string) => {
   const iv = crypto.randomBytes(16)
