@@ -3,46 +3,47 @@ import { i18n } from '../../localisation'
 import { hasLength } from "../../../shared/utils/types"
 
 
-export interface Validation {
-  type: ValidationType
-
+export interface IValidation {
   validate: (data: { [index: string]: any }) => ValidationResult
-
-  toPlainObject: () => {
-    type: string,
-    [customFields: string]: any
-  }
+  toPlainObject: () => object
 }
+
 
 export class ValidationError {
   fields: string[]
-  type: ValidationType
+  validationType: string
   errorString: string
 
-  constructor (fields: string[], type: ValidationType, errorString: string) {
+  constructor (fields: string[], validationType: string, errorString: string) {
     this.fields = fields
-    this.type = type
+    this.validationType = validationType
     this.errorString = errorString
   }
 }
+
 
 export class ValidationResult {
   get isValid () { return !!this.errors.length }
   errors: ValidationError[] = []
 }
 
+export class ValidationFactory {
+  private static _validationLookup: { [key: string]: (any) => IValidation } = {}
 
-export enum ValidationType {
-  Email = 'EMAIL',
-  StringMaxLength = 'STRING_MAX_LENGTH',
-  StringMinLength = 'STRING_MIN_LENGTH',
-  All = 'ALL',
-  Match = 'MATCH'
+  static register (type: string, fromPlainObject: (any) => IValidation) {{
+    ValidationFactory._validationLookup[type] = fromPlainObject
+  }}
+
+  static fromPlainObject (obj: any): IValidation {
+    const fromPlainObject = ValidationFactory._validationLookup[obj.type]
+    return fromPlainObject(obj)
+  }
 }
 
 
-export class StringMinLengthValidation implements Validation {
-  type = ValidationType.StringMinLength
+export class StringMinLengthValidation implements IValidation {
+  
+  static type = 'StringMinLengthValidation'
   name: string
   length: number
 
@@ -59,23 +60,33 @@ export class StringMinLengthValidation implements Validation {
 
     if (data.length < this.length) {
       const errorString = i18n.__('Minimum length is {{ length }} characters', { length: this.length })
-      result.errors.push(new ValidationError([this.name], ValidationType.StringMinLength, errorString))
+      result.errors.push(new ValidationError([this.name], StringMinLengthValidation.type, errorString))
     }
 
     return result
   }
 
-  toPlainObject () {
+  toPlainObject (): object {
     return {
       name: this.name,
-      type: this.type,
+      type: StringMinLengthValidation.type,
       length: this.length,
     }
   }
+
+  static fromPlainObject (obj): StringMinLengthValidation {
+    if (obj.type !== StringMinLengthValidation.type) {
+      throw TypeError(`Cannot cast an object of type '${obj.type}' to StringMinLengthValidation`)
+    }
+    return new StringMinLengthValidation(obj.name, obj.length)
+  }
 }
 
-export class StringMaxLengthValidation implements Validation {
-  type = ValidationType.StringMaxLength
+ValidationFactory.register(StringMinLengthValidation.type, StringMinLengthValidation.fromPlainObject)
+
+
+export class StringMaxLengthValidation implements IValidation {
+  static type = 'StringMaxLengthValidation'
   name: string
   length: number
 
@@ -92,7 +103,7 @@ export class StringMaxLengthValidation implements Validation {
 
     if (data.length > this.length) {
       const errorString = i18n.__('Maximum length is {{ length }} characters', { length: this.length })
-      result.errors.push(new ValidationError([this.name], ValidationType.StringMaxLength, errorString))
+      result.errors.push(new ValidationError([this.name], StringMaxLengthValidation.type, errorString))
     }
 
     return result
@@ -101,15 +112,24 @@ export class StringMaxLengthValidation implements Validation {
   toPlainObject () {
     return {
       name: this.name,
-      type: this.type,
+      type: StringMaxLengthValidation.type,
       length: this.length,
     }
   }
+
+  static fromPlainObject (obj): StringMaxLengthValidation {
+    if (obj.type !== StringMaxLengthValidation.type) {
+      throw TypeError(`Cannot cast an object of type '${obj.type}' to StringMaxLengthValidation`)
+    }
+    return new StringMaxLengthValidation(obj.name, obj.length)
+  }
 }
 
+ValidationFactory.register(StringMaxLengthValidation.type, StringMaxLengthValidation.fromPlainObject)
 
-export class EmailValidation implements Validation {
-  type = ValidationType.Email
+
+export class EmailValidation implements IValidation {
+  static type = 'EmailValidation'
   name: string
 
   constructor (name: string) {
@@ -121,7 +141,7 @@ export class EmailValidation implements Validation {
     const result = new ValidationResult()
     if (!emailRegex.test(data)) {
       const errorString = i18n.__('Not a valid email address')
-      const error = new ValidationError([this.name], this.type, errorString)
+      const error = new ValidationError([this.name], EmailValidation.type, errorString)
       result.errors.push(error)
     }
     return result
@@ -130,8 +150,16 @@ export class EmailValidation implements Validation {
   toPlainObject () {
     return {
       name: this.name,
-      type: this.type
+      type: EmailValidation.type
     }
+  }
+
+  static fromPlainObject (obj): EmailValidation {
+    if (obj.type !== EmailValidation.type) {
+      throw TypeError(`Cannot cast an object of type '${obj.type}' to EmailValidation`)
+    }
+    return new EmailValidation(obj.name);
   }
 }
 
+ValidationFactory.register(EmailValidation.type, EmailValidation.fromPlainObject)

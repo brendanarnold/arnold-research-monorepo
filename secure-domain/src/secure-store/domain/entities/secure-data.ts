@@ -29,6 +29,10 @@ export class GdprPolicy {
       lifetimeSeconds: this.lifetimeSeconds
     }
   }
+
+  static fromPlainObject (obj) {
+    return new GdprPolicy(GdprDataType.Anonymised, 0) // @todo
+  }
 }
 
 export type Storable = object | object[] | string | string[] | number | number[] | null | undefined

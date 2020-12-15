@@ -25,8 +25,17 @@ const form = new FormSchema('P45', '0.0.1')
       .withValidations([new EmailValidation('email')]),
   ])
 
-console.log(form.toJson())
+const formJson = form.toJson()
 
+console.log(formJson)
+
+console.log('========')
+
+const recodedJson = FormSchema.fromJson(formJson).toJson()
+
+console.log(recodedJson)
+
+console.log('========')
 
 const data = {
   firstName: 'Brendan',
