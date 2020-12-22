@@ -1,9 +1,10 @@
 import { isBoolean, isNumber, isString } from '../../../shared/utils/types'
-import { Permission } from "../../../auth/domain/models"
+import { IPermission } from "../../../auth/domain/models"
 import { GdprDataType, GdprPolicy } from "../../../secure-store/domain/entities/secure-data"
 import { Json, SemVer, IntVer } from "../../../shared/models"
 import { IValidation, ValidationFactory, ValidationResult } from "./validations"
-import { IDataTrigger } from './triggers'
+import { DataTriggerFactor, IDataTrigger } from './triggers'
+import { StoredPlainObject } from '.'
 
 
 /**
@@ -44,7 +45,7 @@ export class DataSet {
     return result
   }
 
-  toPlainObject (): object {
+  toPlainObject (): StoredPlainObject {
     return {
       name: this.name,
       type: DataSet.type,
@@ -63,11 +64,9 @@ export class DataSet {
     dataSet.schema = obj.schema.map(valObj => valObj.type === DataField.type
       ? DataField.fromPlainObject(valObj)
       : DataSet.fromPlainObject(valObj))
-    // @todo
-    dataSet.isRequired = true
-    // dataSet.isRequired = isBoolean(obj.isRequired)
-    //   ? obj.isRequired
-    //   : DataTriggerFactory.fromPlainObject(obj)
+    dataSet.isRequired = isBoolean(obj.isRequired)
+      ? obj.isRequired
+      : DataTriggerFactor.fromPlainObject(obj)
     return dataSet
   }
 }
@@ -111,7 +110,7 @@ export class FormSchema {
     return result
   }
 
-  toPlainObject (): object {
+  toPlainObject (): StoredPlainObject {
     return {
       name: this.name,
       type: FormSchema.type,
@@ -167,7 +166,7 @@ export class DataField {
   name: string
   storageType: StorageType
   gdprPolicy: GdprPolicy
-  permissions: Permission[] = []
+  permissions: IPermission[] = []
   validations: IValidation[] = []
 
   constructor (name: string, storageType: StorageType, gdprPolicy: GdprPolicy) {
@@ -181,7 +180,7 @@ export class DataField {
     return this
   }
 
-  withPermissions (permissions: Permission[]) {
+  withPermissions (permissions: IPermission[]) {
     this.permissions.push(...permissions)
     return this
   }
@@ -195,7 +194,7 @@ export class DataField {
     return result
   }
 
-  toPlainObject (): object {
+  toPlainObject (): StoredPlainObject {
     return {
       name: this.name,
       type: this.constructor.name,
@@ -206,12 +205,11 @@ export class DataField {
     }
   }
 
-  static fromPlainObject (obj): DataField {
-    // @todo Checks
+  static fromPlainObject (obj: any): DataField {
     const gdprPolicy = GdprPolicy.fromPlainObject(obj.gdprPolicy)
     const field = new DataField(obj.name, obj.storageType, gdprPolicy)
     // @todo
-    // field.permissions = obj.permissions.map(pObj => PermissionFactory.fromPlainObject(pObj))
+    field.permissions = obj.permissions.map(pObj => PermissionFactory.fromPlainObject(pObj))
     field.validations = obj.validations.map(vObj => ValidationFactory.fromPlainObject(vObj))
     return field
   }

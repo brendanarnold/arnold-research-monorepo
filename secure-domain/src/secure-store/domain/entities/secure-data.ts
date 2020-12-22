@@ -1,5 +1,7 @@
 
+import { StoredPlainObject } from '../../../forms/domain/models'
 import { decryptAes } from '../../../shared/utils/encryption'
+import { isNumber } from '../../../shared/utils/types'
 
 export enum GdprDataType {
   Anonymised = 'ANONYMISED',
@@ -14,6 +16,7 @@ export enum GdprLifetime {
 }
 
 export class GdprPolicy {
+  static type = 'GdprPolicy'
   dataType: GdprDataType
   // Lifetime in seconds
   lifetimeSeconds: (GdprLifetime | number)
@@ -23,15 +26,23 @@ export class GdprPolicy {
     this.lifetimeSeconds = lifetimeSeconds
   }
 
-  toPlainObject () {
+  toPlainObject (): StoredPlainObject {
     return {
+      type: GdprPolicy.type,
       dataType: this.dataType,
       lifetimeSeconds: this.lifetimeSeconds
     }
   }
 
-  static fromPlainObject (obj) {
-    return new GdprPolicy(GdprDataType.Anonymised, 0) // @todo
+  static fromPlainObject (obj: any) {
+    if (obj.type !== GdprPolicy.type) {
+      throw TypeError(`Cannot cast an object of type '${obj.type}' to GdprPolicy`)
+    }
+    if (!isNumber(obj.lifetimeSeconds)
+      && !Object.values(GdprLifetime).includes(obj.lifetimeSeconds)) {
+      throw TypeError(`Invalid lifetimeSeconds property on GdprPolicy: ${obj.lifetimeSeconds}`)
+    }
+    return new GdprPolicy(obj.dataType, obj.lifetimeSeconds)
   }
 }
 

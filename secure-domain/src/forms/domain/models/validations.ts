@@ -74,7 +74,7 @@ export class StringMinLengthValidation implements IValidation {
     }
   }
 
-  static fromPlainObject (obj): StringMinLengthValidation {
+  static fromPlainObject (obj: any): StringMinLengthValidation {
     if (obj.type !== StringMinLengthValidation.type) {
       throw TypeError(`Cannot cast an object of type '${obj.type}' to StringMinLengthValidation`)
     }
