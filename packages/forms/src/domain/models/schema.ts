@@ -1,10 +1,10 @@
-import { isBoolean, isNumber, isString, isNullOrUndefined } from '@tngbl/utils/types'
+import { isBoolean, isNumber, isString, isNullOrUndefined } from '@tngbl/utils'
 import { IPermission, PermissionFactory } from '@tngbl/auth'
 import { GdprDataType, GdprPolicy } from '@tngbl/secure-store'
-import { Json, SemVer, IntVer } from '@tngbl/utils/encryption'
+import { Json, SemVer, IntVer } from '@tngbl/models'
 import { IValidation, ValidationError, ValidationFactory, ValidationResult } from "./validations"
 import { DataTriggerFactor, IDataTrigger } from './triggers'
-import { StoredPlainObject } from '.'
+import { StoredPlainObject } from '@tngbl/models'
 import { FormSyntaxError } from './exceptions'
 
 

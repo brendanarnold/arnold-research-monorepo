@@ -1,4 +1,4 @@
-import { StoredPlainObject } from ".";
+import { StoredPlainObject } from "@tngbl/models";
 
 export interface IDataTrigger {
   isTriggered: (object) => boolean

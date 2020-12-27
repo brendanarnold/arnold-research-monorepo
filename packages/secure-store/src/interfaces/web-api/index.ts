@@ -1,5 +1,5 @@
 
-import express from 'express'
+import * as express from 'express'
 import { AddressInfo } from 'net'
 import { Monitor } from '@tngbl/monitor'
 import infoRouter from './routes/info'

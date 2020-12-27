@@ -1,17 +1,9 @@
 {
   "extends": "../../tsconfig.json",
-  "exclude": [
-    "node_modules"
-  ],
   "compilerOptions": {
-    "baseUrl": "./",
-    "target": "es5",
-    "module": "commonjs",
-    "outDir": "build",
-    "sourceMap": true,
-    "resolveJsonModule": true,
-    "lib": [
-      "es2019"
-    ]
-  }
+    "outDir": "./build"
+  },
+  "include": [
+    "./src"
+  ]
 }

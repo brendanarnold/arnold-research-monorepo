@@ -1,6 +1,6 @@
 
-import { StoredPlainObject } from '@tngbl/forms'
-import utils from '@tngbl/utils'
+import { StoredPlainObject } from '@tngbl/models'
+import { decryptAes, isNumber } from '@tngbl/utils'
 
 export enum GdprDataType {
   Anonymised = 'ANONYMISED',
@@ -37,7 +37,7 @@ export class GdprPolicy {
     if (obj.type !== GdprPolicy.type) {
       throw TypeError(`Cannot cast an object of type '${obj.type}' to GdprPolicy`)
     }
-    if (!utils.isNumber(obj.lifetimeSeconds)
+    if (!isNumber(obj.lifetimeSeconds)
       && !Object.values(GdprLifetime).includes(obj.lifetimeSeconds)) {
       throw TypeError(`Invalid lifetimeSeconds property on GdprPolicy: ${obj.lifetimeSeconds}`)
     }
@@ -69,7 +69,7 @@ export class SecureData {
     ed.createdOn = row.created_on
     ed.gdprType = row.gdpr_type
 
-    ed.decryptedValue = utils.decryptAes(ed.encryptedJson, ed.encryptionIv, ed.encryptionMethod)
+    ed.decryptedValue = decryptAes(ed.encryptedJson, ed.encryptionIv, ed.encryptionMethod)
 
     return ed
   }

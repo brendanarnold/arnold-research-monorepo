@@ -1,2 +1,2 @@
-export * as types from './utils/types'
-export * as encryption from './utils/encryption'
+export * from './utils/types'
+export * from './utils/encryption'
