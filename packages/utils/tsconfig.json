@@ -1,0 +1,16 @@
+{
+  "extends": "../../",
+  "exclude": [
+    "node_modules"
+  ],
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "outDir": "build",
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "lib": [
+      "es2019"
+    ]
+  }
+}
