@@ -2,17 +2,19 @@
   "compilerOptions": {
     "module": "commonjs",
     "declaration": true,
-    // "noImplicitAny": true,
+    "moduleResolution": "node",
     "removeComments": true,
     "noLib": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "target": "es2015",
+    "target": "ES2015",
     "sourceMap": true,
     "lib": [
       "es2019"
     ],
     "resolveJsonModule": true,
-    "forceConsistentCasingInFileNames": true
-  }
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "./build" // This avoids polluting source directories if root tsc is run
+  },
+  "exclude": ["node_modules", ".vscode"]
 }

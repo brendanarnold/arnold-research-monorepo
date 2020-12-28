@@ -1,9 +1,8 @@
 
-import { encryptAes, decryptAes } from '@tngbl/utils'
+import { encryptAes, decryptAes, isNullOrUndefined } from '@tngbl/utils'
 import * as db from '../database'
 import * as uuid from 'uuid'
 import { SecureData, Storable, GdprPolicy, GdprLifetime } from '../../entities/secure-data'
-import { isNullOrUndefined } from '@tngbl/utils'
 
 
 export const create = async (obj: Storable, gdprPolicy: GdprPolicy) => {
