@@ -29,8 +29,8 @@
     "tsc": "npx tsc",
     "test": "npx jest",
     "build:generate-git-hash": "HASH=\\\"$(git rev-parse HEAD)\\\"; echo $HASH > build/git-hash.json; echo $HASH > git-hash.json",
-    "dev:compile": "./node_modules/.bin/tsc -w",
-    "dev:run": "./node_modules/.bin/nodemon build/src/index.js"
+    "dev:compile": "npx tsc -w",
+    "dev:run": "npx nodemon build/index.js"
   },
   "author": "",
   "license": "ISC"

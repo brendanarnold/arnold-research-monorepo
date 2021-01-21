@@ -24,20 +24,30 @@ export enum StorageType {
 }
 
 
-export class DataSet {
+export class FieldSet {
 
-  static readonly type = 'DataSet'
+  static readonly type: string = 'FieldSet'
   name: string
-  schema: (DataField | DataSet)[] = []
+  structure: (FieldInstance | FieldSet)[] = []
   validations: IValidation[] = []
   isRequired: (IDataTrigger | boolean) = true
 
-  validate (data): ValidationResult {
+  withDataSets (dataSets: FieldSet[]) {
+    this.structure.push(...dataSets)
+    return this
+  }
+
+  withValidations (validations: IValidation[]) {
+    this.validations.push(...validations)
+    return this
+  }
+
+  validate (data: any, fields: Field[]): ValidationResult {
     const formErrors = this.validations
       .map(validation => validation.validate(data))
       .flatMap(vResult => vResult.errors)
-    const componentErrors = this.schema
-      .map(component => component.validate(data[component.name]))
+    const componentErrors = this.structure
+      .map(component => component.validate(data[component.name], fields))
       .flatMap(vRes => vRes.errors)
     
     const result = new ValidationResult()
@@ -49,8 +59,8 @@ export class DataSet {
   toPlainObject (): StoredPlainObject {
     return {
       name: this.name,
-      type: DataSet.type,
-      schema: this.schema.map(s => s.toPlainObject()),
+      type: FieldSet.type,
+      structure: this.structure.map(s => s.toPlainObject()),
       validations: this.validations.map(v => v.toPlainObject()),
       isRequired: isBoolean(this.isRequired)
         ? this.isRequired
@@ -58,19 +68,19 @@ export class DataSet {
     }
   }
 
-  static fromPlainObject (obj: any): DataSet {
-    const dataSet = new DataSet()
+  static fromPlainObject (obj: any): FieldSet {
+    const dataSet = new FieldSet()
     if (isNullOrUndefined(obj)) {
-      throw new FormSyntaxError(`Cannot convert null or undefined to type '${DataSet.type}'`)
+      throw new FormSyntaxError(`Cannot convert null or undefined to type '${FieldSet.type}'`)
     }
     if (!isString(obj.name)) {
       throw new FormSyntaxError("Property 'name' is not a string")
     }
     dataSet.name = obj.name
     dataSet.validations = obj.validations.map(valObj => ValidationFactory.fromPlainObject(valObj))
-    dataSet.schema = obj.schema.map(valObj => valObj.type === DataField.type
-      ? DataField.fromPlainObject(valObj)
-      : DataSet.fromPlainObject(valObj))
+    dataSet.structure = obj.structure.map(valObj => valObj.type === FieldInstance.type
+      ? FieldInstance.fromPlainObject(valObj)
+      : FieldSet.fromPlainObject(valObj))
     dataSet.isRequired = isBoolean(obj.isRequired)
       ? obj.isRequired
       : DataTriggerFactor.fromPlainObject(obj)
@@ -78,109 +88,88 @@ export class DataSet {
   }
 }
 
-export class FormSchema {
+
+export class Schema extends FieldSet {
   /** Increment when make a breaking change to persistence marshalling */
   static readonly storageVersion: IntVer = 1
-  static readonly type = 'FormSchema'
-  
-  name: string 
+  static readonly type: string = 'Schema'
+
   schemaVersion: SemVer
-  schema: (DataSet | DataField)[] = []
-  validations: IValidation[] = []
+  fields: Field[] = []
 
-  constructor (name: string, schemaVersion: string) {
+  validate (data: any): ValidationResult {
+    return super.validate(data, this.fields)
+  }
+
+  toPlainObject (): StoredPlainObject {
+    const obj = super.toPlainObject()
+    obj.type = Schema.type
+    obj.schemaVersion = this.schemaVersion
+    obj.fields = this.fields.map(field => field.toPlainObject())
+    return obj
+  }
+
+  static fromPlainObject (obj: any): Schema {
+    const schema = new Schema()
+    schema.schemaVersion = obj.schemaVersion
+    schema.fields = obj.fields.map(fieldObj => Field.fromPlainObject(fieldObj))
+    schema.name = obj.name
+    schema.validations = obj.validations.map(valObj => ValidationFactory.fromPlainObject(valObj))
+    schema.structure = obj.structure.map(valObj => valObj.type === FieldInstance.type
+      ? FieldInstance.fromPlainObject(valObj)
+      : FieldSet.fromPlainObject(valObj))
+    schema.isRequired = isBoolean(obj.isRequired)
+      ? obj.isRequired
+      : DataTriggerFactor.fromPlainObject(obj)
+    
+    return schema
+  }
+
+  toJson (): string {
+    return JSON.stringify(this.toPlainObject(), null, 2)
+  }
+
+  static fromJson (json: string): Schema {
+    return Schema.fromPlainObject(JSON.parse(json))
+  }
+}
+
+
+
+export class FieldInstance {
+  static readonly type = 'FieldInstance'
+
+  name: string // Unique to the FormSchema e.g. lastName1 or mothersMaidenName
+  fieldName: string
+
+  constructor (name: string, fieldName: string) {
     this.name = name
-    this.schemaVersion = schemaVersion
+    this.fieldName = fieldName
   }
 
-  withSchema (schemaItems: (DataSet | DataField)[]) {
-    this.schema.push(...schemaItems)
-    return this
-  }
-
-  withValidations (validations: IValidation[]) {
-    this.validations.push(...validations)
-    return this
-  }
-
-  validate (data): ValidationResult {
-    const formErrors = this.validations
-      .map(validation => validation.validate(data))
-      .flatMap(vResult => vResult.errors)
-    const schemaErrors = this.schema
-      .map(component => component.validate(data[component.name]))
-      .flatMap(vRes => vRes.errors)
-    
-    const result = new ValidationResult()
-    result.errors = formErrors.concat(schemaErrors)
-    
-    return result
+  validate (data: any, fields: Field[]) {
+    const field = fields.find(field => field.name === this.fieldName)
+    return field.validate(data)
   }
 
   toPlainObject (): StoredPlainObject {
     return {
-      name: this.name,
-      type: FormSchema.type,
-      storageVersion: FormSchema.storageVersion,
-      schemaVersion: this.schemaVersion,
-      schema: this.schema.map(schemaItem => schemaItem.toPlainObject()),
-      validations: this.validations.map(v => v.toPlainObject())
+      type: FieldInstance.type,
+      fieldName: this.fieldName
     }
   }
 
-  toJson (): Json {
-    return JSON.stringify(this.toPlainObject(), null, 2)
+  static fromPlainObject (obj: any): FieldInstance {
+    // @todo Checks
+    return new FieldInstance(obj.name, obj.fieldName)
   }
-
-  static fromPlainObject (obj: any): FormSchema {
-    if (isNullOrUndefined(obj)) {
-      throw new FormSyntaxError(`Cannot convert null or undefined to type ${FormSchema.type}`)
-    }
-    if (obj.type !== FormSchema.type) {
-      throw new FormSyntaxError(`Object is not of ${FormSchema.type} type, is '${obj.type}'`)
-    }
-    if (!isNumber(obj.storageVersion)) {
-      throw new FormSyntaxError(`Property 'storageVersion' is not a string, is '${obj.storageVersion}'`)
-    }
-    if (!isString(obj.name)) {
-      throw new FormSyntaxError(`Property 'name' is not a string, is '${obj.name}'`)
-    }
-    if (!Array.isArray(obj.schema)) {
-      throw new FormSyntaxError(`Property 'schema' is not an array, is '${obj.schema}'`)
-    }
-    if (!Array.isArray(obj.validations)) {
-      throw new FormSyntaxError(`Property 'validations' is not an array, is ${obj.validations}`)
-    }
-
-    const form = new FormSchema(obj.name, obj.schemaVersion)
-    
-    form.validations = obj.validations.map(valObj => ValidationFactory.fromPlainObject(valObj))
-    form.schema = obj.schema.map(valObj => valObj.type === DataField.type
-      ? DataField.fromPlainObject(valObj)
-      : DataSet.fromPlainObject(valObj))
-
-    return form
-  }
-
-  static fromJson (jsonString: string): FormSchema {
-    let json
-    try {
-      json = JSON.parse(jsonString)
-    } catch (error) {
-      if (error instanceof SyntaxError) {
-        throw new FormSyntaxError('JSON is not valid')
-      }
-    }
-    return FormSchema.fromPlainObject(json)
-  }
-
 }
 
 
-export class DataField {
-  static readonly type = 'DataField'
+export class Field {
+  static readonly type = 'Field'
 
-  name: string
+  name: string // Unique to the FormSchema e.g. firstName
   storageType: StorageType
   gdprPolicy: GdprPolicy
   permissions: IPermission[] = []
@@ -214,7 +203,7 @@ export class DataField {
   toPlainObject (): StoredPlainObject {
     return {
       name: this.name,
-      type: DataField.type,
+      type: Field.type,
       storageType: this.storageType,
       gdprPolicy: this.gdprPolicy.toPlainObject(),
       permissions: this.permissions,
@@ -222,15 +211,15 @@ export class DataField {
     }
   }
 
-  static fromPlainObject (obj: any): DataField {
+  static fromPlainObject (obj: any): Field {
     if (isNullOrUndefined(obj)) {
-      throw new FormSyntaxError(`Cannot convert null or undefined into ${DataField.type} object`)
+      throw new FormSyntaxError(`Cannot convert null or undefined into ${Field.type} object`)
     }
-    if (obj.type !== DataField.type) {
-      throw new FormSyntaxError(`Property 'type' is not '${DataField.type}', is ${obj.type}` )
+    if (obj.type !== Field.type) {
+      throw new FormSyntaxError(`Property 'type' is not '${Field.type}', is ${obj.type}` )
     }
     const gdprPolicy = GdprPolicy.fromPlainObject(obj.gdprPolicy)
-    const field = new DataField(obj.name, obj.storageType, gdprPolicy)
+    const field = new Field(obj.name, obj.storageType, gdprPolicy)
     field.permissions = obj.permissions.map(pObj => PermissionFactory.fromPlainObject(pObj))
     field.validations = obj.validations.map(vObj => ValidationFactory.fromPlainObject(vObj))
     return field

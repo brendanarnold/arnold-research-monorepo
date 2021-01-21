@@ -1,48 +1,66 @@
-// import { DataField, FormSchema, StorageType } from '@tngbl/forms/models'
-// import { EmailValidation, StringMaxLengthValidation, StringMinLengthValidation } from '@tngbl/forms/validations'
-// import { GdprDataType, GdprPolicy, GdprLifetime } from '@tngbl/secure-data';
+import { EmailValidation, StringMaxLengthValidation, StringMinLengthValidation } from '../packages/forms/src/domain/models/validations'
+import { FieldSet, Field, FieldInstance, Schema, StorageType } from '../packages/forms/src/domain/models/schema';
+import { GdprDataType, GdprPolicy, GdprLifetime } from '../packages/secure-store/src/domain/entities/secure-data';
 
+const schema = new Schema()
+schema.fields = [
+  new Field('firstName', StorageType.String, new GdprPolicy(
+    GdprDataType.Anonymous, GdprLifetime.Persistent
+  ))
+    .withValidations([
+      new StringMaxLengthValidation('firstName', 6),
+      new StringMinLengthValidation('firstName', 2)
+    ]),
+  new Field('lastName', StorageType.String, new GdprPolicy(
+    GdprDataType.Anonymous, GdprLifetime.Persistent
+  ))
+    .withValidations([
+      new StringMaxLengthValidation('lastName', 6),
+      new StringMinLengthValidation('lastName', 2)
+    ]),
+  new Field('email', StorageType.String, new GdprPolicy(
+    GdprDataType.Personal, GdprLifetime.Transient
+  ))
+    .withValidations([new EmailValidation('email')]),
+]
 
-// const form = new FormSchema('P45', '0.0.1')
-//   .withSchema([
-//     new DataField('firstName', StorageType.String, new GdprPolicy(
-//       GdprDataType.Anonymous, GdprLifetime.Persistent
-//     ))
-//       .withValidations([
-//         new StringMaxLengthValidation('firstName', 6),
-//         new StringMinLengthValidation('firstName', 2)
-//       ]),
-//     new DataField('lastName', StorageType.String, new GdprPolicy(
-//       GdprDataType.Anonymous, GdprLifetime.Persistent
-//     ))
-//       .withValidations([
-//         new StringMaxLengthValidation('lastName', 6),
-//         new StringMinLengthValidation('lastName', 2)
-//       ]),
-//     new DataField('email', StorageType.String, new GdprPolicy(
-//       GdprDataType.Personal, GdprLifetime.Transient
-//     ))
-//       .withValidations([new EmailValidation('email')]),
-//   ])
+const fieldSet = new FieldSet()
+fieldSet.structure = [
+  new FieldInstance('myFirstName', 'firstName'),
+  new FieldInstance('myLastName', 'lastName'),
+  new FieldInstance('myEmail', 'email'),
+  new FieldInstance('mothersMaidenName', 'lastName')
+]
+fieldSet.name = 'main'
 
-// const formJson = form.toJson()
+schema.structure = [
+  fieldSet
+]
 
-// console.log(formJson)
+schema.name = 'P45'
+schema.schemaVersion = '0.0.1'
 
-// console.log('========')
+const schemaJson = schema.toJson()
 
-// const recodedJson = FormSchema.fromJson(formJson).toJson()
+console.log(schemaJson)
 
-// console.log(recodedJson)
+console.log('========')
 
-// console.log('========')
+const recodedJson = Schema.fromJson(schemaJson).toJson()
 
-// const data = {
-//   firstName: 'Brendan',
-//   lastName: 'Arnold',
-//   email: 'blahblah.com',
-// }
+console.log(recodedJson)
 
-// const validationResult = form.validate(data)
+console.log('========')
 
-// console.log(JSON.stringify(validationResult, null, 2))
+const data = {
+  main: {
+    myFirstName: 'Bren',
+    myLastName: 'Arnold',
+    myEmail: 'blah@blah.com',
+    mothersMaidenName: 'Yeo'
+  }
+}
+
+const validationResult = schema.validate(data)
+
+console.log(JSON.stringify(validationResult, null, 2))
