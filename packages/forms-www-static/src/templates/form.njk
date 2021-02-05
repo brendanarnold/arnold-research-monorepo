@@ -1,5 +1,11 @@
 
 <form>
-{% set viewModel = formHtml %}
-{% include "foo.njk" %}
+{% for component in form.schema.structure %}
+  {% set viewModel = form.data[component.name] %}
+  {% if component.viewType == "Section"  %}
+  {% include "section.njk" %}
+  {% else %}
+  {% include component.viewType + ".njk" %}
+  {% endif %}
+{% endfor %}
 </form>
