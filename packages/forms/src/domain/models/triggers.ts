@@ -5,15 +5,15 @@ export interface IDataTrigger {
   toPlainObject: () => StoredPlainObject
 }
 
-export class DataTriggerFactor {
+export class DataTriggerFactory {
   private static _dataTriggerLookup: { [key: string]: (any) => IDataTrigger } = {}
 
   static register (type: string, fromPlainObject: (any) => IDataTrigger) {{
-    DataTriggerFactor._dataTriggerLookup[type] = fromPlainObject
+    DataTriggerFactory._dataTriggerLookup[type] = fromPlainObject
   }}
 
   static fromPlainObject (obj: any): IDataTrigger {
-    const fromPlainObject = DataTriggerFactor._dataTriggerLookup[obj.type]
+    const fromPlainObject = DataTriggerFactory._dataTriggerLookup[obj.type]
     return fromPlainObject(obj)
   }
 }
