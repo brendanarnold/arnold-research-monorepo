@@ -26,16 +26,20 @@ export enum StorageType {
 export class Field {
   static readonly type = 'Field'
 
-  name: string // Unique to the FormSchema e.g. firstName
+  name: string // Unique to the FormSchema e.g. mothersFirstName
+  label: string // e.g. Mother's first name
   storageType: StorageType
+  viewType: string // Determines what component will be used for editing/displaying the field e.g. firstName
   gdprPolicy: GdprPolicy
   permissions: IPermission[] = []
   validations: IValidation[] = []
 
-  constructor (name: string, storageType: StorageType, gdprPolicy: GdprPolicy) {
+  constructor (name: string, label: string, storageType: StorageType, gdprPolicy: GdprPolicy, viewType: string) {
     this.name = name
+    this.label = label
     this.storageType = storageType
     this.gdprPolicy = gdprPolicy
+    this.viewType = viewType
   }
 
   withValidations (validations: IValidation[]) {
@@ -60,7 +64,9 @@ export class Field {
   toPlainObject (): StoredPlainObject {
     return {
       name: this.name,
+      label: this.label,
       type: Field.type,
+      viewType: this.viewType,
       storageType: this.storageType,
       gdprPolicy: this.gdprPolicy.toPlainObject(),
       permissions: this.permissions,
@@ -70,7 +76,7 @@ export class Field {
 
   static fromPlainObject (obj: any): Field {
     const gdprPolicy = GdprPolicy.fromPlainObject(obj.gdprPolicy)
-    const field = new Field(obj.name, obj.storageType, gdprPolicy)
+    const field = new Field(obj.name, obj.label, obj.storageType, gdprPolicy, obj.viewType)
     field.permissions = obj.permissions.map(pObj => PermissionFactory.fromPlainObject(pObj))
     field.validations = obj.validations.map(vObj => ValidationFactory.fromPlainObject(vObj))
     return field
