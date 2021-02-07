@@ -30,7 +30,9 @@ export class StaticWebRenderer {
       autoescape: true
     })
 
-    const viewModel = FormViewModel.fromForm(this.form)
+    const viewModel = {
+      form: FormViewModel.fromForm(this.form)
+    }
 
     const html = nunjucks.render('form.njk', viewModel)
 

@@ -8,7 +8,7 @@ import { Json, StoredPlainObject } from '@tngbl/models'
 export class Form {
   static type: string = 'Form'
 
-  data: object
+  data: object = {}
   schema: Schema
 
   validate (): ValidationResult {

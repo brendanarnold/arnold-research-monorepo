@@ -1,11 +1,16 @@
+{% extends "base.njk" %}
 
-<form>
-{% for component in form.schema.structure %}
-  {% set viewModel = form.data[component.name] %}
+
+{% block main %}
+<form method="post" action="/submit" autocomplete="on">
+{% for component in form.components %}
+  {% set viewModel = component %}
   {% if component.viewType == "Section"  %}
-  {% include "section.njk" %}
+    {% include "section.njk" %}
   {% else %}
-  {% include component.viewType + ".njk" %}
+    {% include "components/" + component.viewType + ".njk" %}
   {% endif %}
 {% endfor %}
+<button type="submit">Save</button>
 </form>
+{% endblock %}
