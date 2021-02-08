@@ -1,6 +1,6 @@
-import { EmailValidation, StringMaxLengthValidation, StringMinLengthValidation } from '../packages/forms/src/domain/models/validations'
-import { FieldSet, Field, FieldInstance, Schema, StorageType } from '../packages/forms/src/domain/models/schema';
-import { GdprDataType, GdprPolicy, GdprLifetime } from '../packages/secure-store/src/domain/entities/secure-data';
+import { EmailValidation, StringMaxLengthValidation, StringMinLengthValidation } from '@tngbl/forms/src/domain/models/validations'
+import { FieldSet, Field, FieldInstance, Schema, StorageType } from '@tngbl/forms/src/domain/models/schema';
+import { GdprDataType, GdprPolicy, GdprLifetime } from '@tngbl/secure-store/src/domain/entities/secure-data';
 
 const schema = new Schema()
 schema.fields = [
