@@ -2,15 +2,17 @@
 
 
 {% block main %}
-<form method="post" action="/submit" autocomplete="on">
-{% for component in form.components %}
-  {% set viewModel = component %}
-  {% if component.viewType == "Section"  %}
-    {% include "section.njk" %}
-  {% else %}
-    {% include "components/" + component.viewType + ".njk" %}
-  {% endif %}
-{% endfor %}
-<button type="submit">Save</button>
-</form>
+<div id="form">
+  <form method="post" action="/submit" autocomplete="on">
+  {% for component in form.components %}
+    {% set viewModel = component %}
+    {% if component.viewType == "Section"  %}
+      {% include "section.njk" %}
+    {% else %}
+      {% include "components/" + component.viewType + ".njk" %}
+    {% endif %}
+  {% endfor %}
+  <button type="submit">Save</button>
+  </form>
+</div>
 {% endblock %}

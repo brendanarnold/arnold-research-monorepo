@@ -1,0 +1,8 @@
+
+<section class="form-sub-section">
+  <h2>{{viewModel.label}}</h2>
+  {% for component in viewModel.components %}
+    {% set viewModel = component %}
+    {% include "components/" + component.viewType + ".njk" %}
+  {% endfor %}
+</section>

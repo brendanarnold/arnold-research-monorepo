@@ -1,5 +1,12 @@
 
-<section>
-<h1>{{viewModel.label}}</h1>
-
+<section class="form-section">
+  <h1>{{viewModel.label}}</h1>
+  {% for component in viewModel.components %}
+    {% set viewModel = component %}
+    {% if component.viewType == "SubSection"  %}
+      {% include "subSection.njk" %}
+    {% else %}
+      {% include "components/" + component.viewType + ".njk" %}
+    {% endif %}
+  {% endfor %}
 </section>
