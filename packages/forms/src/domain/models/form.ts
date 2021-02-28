@@ -11,21 +11,22 @@ export class Form {
   data: object = {}
   schema: Schema
 
+
   validate (): ValidationResult {
-    return this.schema.validate(this.data)
+    return this.schema.validate(this.getData())
   }
 
   toPlainObj (): StoredPlainObject {
     return {
       type: Form.type,
-      data: this.data,
+      data: this.getData(),
       schema: this.schema.toPlainObject()
     }
   }
 
   static fromPlainObj (obj: any): Form {
     const form = new Form()
-    form.data = obj.data
+    form._data = obj.data
     form.schema = Schema.fromPlainObject(obj.schema)
     return form
   }

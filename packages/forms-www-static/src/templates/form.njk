@@ -1,8 +1,13 @@
-{% extends "base.njk" %}
+{# {% extends "base.njk" %} #}
 
 
-{% block main %}
+{# {% block main %} #}
 <div id="form">
+  <style>
+    .hidden {
+      display: none;
+    }
+  </style>
   <form method="post" action="/submit" autocomplete="on">
   {% for component in form.components %}
     {% set viewModel = component %}
@@ -15,4 +20,4 @@
   <button type="submit">Save</button>
   </form>
 </div>
-{% endblock %}
+{# {% endblock %} #}

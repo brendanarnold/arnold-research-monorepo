@@ -1,2 +1,2 @@
-<label for="lastName">First name</label>
-<input type="text" name="lastName" autocomplete="family-name" value="{{ data.lastName }}" />
+<label for="{{ viewModel.name }}">{{ viewModel.label }}</label>
+<input type="text" name="{{ viewModel.name }}" autocomplete="family-name" value="{{ data.lastName }}" />

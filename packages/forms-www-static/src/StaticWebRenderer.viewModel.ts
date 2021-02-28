@@ -1,4 +1,4 @@
-import { Field, FieldSet, Form } from "@tngbl/forms"
+import { Field, FieldSet, Form, IValidation } from "@tngbl/forms"
 
 
 class SectionViewModel {
@@ -46,12 +46,14 @@ class FieldViewModel {
   viewType: string
   label: string
   data: object
+  validationJson: string
 
   static fromField (field: Field, data: object): FieldViewModel {
     const viewModel = new FieldViewModel()
     viewModel.name = field.name
     viewModel.viewType = field.viewType
     viewModel.label = field.label
+    viewModel.validationJson = JSON.stringify(field.validations.map(v => v.toPlainObject()))
     viewModel.data = data
     return viewModel
   }

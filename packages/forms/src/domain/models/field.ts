@@ -20,12 +20,20 @@ export enum StorageType {
 }
 
 
+// interface FieldParameters {
+//   name: string,
+//   label: string,
+//   storageType: StorageType,
+//   gdprPolicy: GdprPolicy,
+//   viewType: string
+// }
+
 /**
  * Represents an instance of a field in a form
  */
 export class Field {
   static readonly type = 'Field'
-
+  
   name: string // Unique to the FormSchema e.g. mothersFirstName
   label: string // e.g. Mother's first name
   storageType: StorageType
@@ -34,7 +42,7 @@ export class Field {
   permissions: IPermission[] = []
   validations: IValidation[] = []
 
-  constructor (name: string, label: string, storageType: StorageType, gdprPolicy: GdprPolicy, viewType: string) {
+  constructor (name, label, storageType, gdprPolicy, viewType) {
     this.name = name
     this.label = label
     this.storageType = storageType
