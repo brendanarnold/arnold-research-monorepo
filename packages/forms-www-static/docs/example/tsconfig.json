@@ -1,0 +1,10 @@
+// 'Backend-by-default' configuration
+
+{
+  "extends": "../../../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./build/server",
+    "strictNullChecks": true
+  },
+  "include": ["./src/server", "./src/shared", "./src/example-form.ts"]
+}

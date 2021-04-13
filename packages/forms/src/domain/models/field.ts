@@ -1,8 +1,8 @@
-import { IPermission, PermissionFactory } from "@tngbl/auth"
-import { StoredPlainObject } from "@tngbl/models"
-import { GdprPolicy } from "@tngbl/secure-store"
-import { IValidation, ValidationResult, ValidationFactory } from "."
-
+import { IPermission, PermissionFactory } from '@tngbl/auth'
+import { StoredPlainObject } from '@tngbl/models'
+import { GdprPolicy } from '@tngbl/secure-store'
+import type { IBuilders } from '../../form-module'
+import { IValidationError, IValidation } from '../../validations'
 
 /**
  * Defines the type used in the persistence layer
@@ -16,24 +16,15 @@ export enum StorageType {
   Date = 'DATE',
   Time = 'TIME',
   Timestamp = 'TIMESTAMP',
-  Duration = 'DURATION',
+  Duration = 'DURATION'
 }
-
-
-// interface FieldParameters {
-//   name: string,
-//   label: string,
-//   storageType: StorageType,
-//   gdprPolicy: GdprPolicy,
-//   viewType: string
-// }
 
 /**
  * Represents an instance of a field in a form
  */
 export class Field {
   static readonly type = 'Field'
-  
+
   name: string // Unique to the FormSchema e.g. mothersFirstName
   label: string // e.g. Mother's first name
   storageType: StorageType
@@ -42,7 +33,13 @@ export class Field {
   permissions: IPermission[] = []
   validations: IValidation[] = []
 
-  constructor (name, label, storageType, gdprPolicy, viewType) {
+  constructor(
+    name: string,
+    label: string,
+    storageType: StorageType,
+    gdprPolicy: GdprPolicy,
+    viewType: string
+  ) {
     this.name = name
     this.label = label
     this.storageType = storageType
@@ -50,26 +47,16 @@ export class Field {
     this.viewType = viewType
   }
 
-  withValidations (validations: IValidation[]) {
-    this.validations.push(...validations)
-    return this
-  }
-
-  withPermissions (permissions: IPermission[]) {
+  withPermissions(permissions: IPermission[]): Field {
     this.permissions.push(...permissions)
     return this
   }
 
-  validate (data: object): ValidationResult {
-    const result = new ValidationResult()
-    result.errors = this.validations
-      .map(v => v.validate(data))
-      .flatMap(vRes => vRes.errors)
-
-    return result
+  validate(id: string, data: FormData): IValidationError[] {
+    return this.validations.map((v) => v.validate(id, data)).flat()
   }
 
-  toPlainObject (): StoredPlainObject {
+  toPlainObject(): StoredPlainObject {
     return {
       name: this.name,
       label: this.label,
@@ -78,15 +65,28 @@ export class Field {
       storageType: this.storageType,
       gdprPolicy: this.gdprPolicy.toPlainObject(),
       permissions: this.permissions,
-      validations: this.validations.map(v => v.toPlainObject())
+      validations: this.validations.map((v) => v.toPlainObject())
     }
   }
 
-  static fromPlainObject (obj: any): Field {
+  static fromPlainObject(obj: any, builders: IBuilders): Field {
     const gdprPolicy = GdprPolicy.fromPlainObject(obj.gdprPolicy)
-    const field = new Field(obj.name, obj.label, obj.storageType, gdprPolicy, obj.viewType)
-    field.permissions = obj.permissions.map(pObj => PermissionFactory.fromPlainObject(pObj))
-    field.validations = obj.validations.map(vObj => ValidationFactory.fromPlainObject(vObj))
+    const field = new Field(
+      obj.name,
+      obj.label,
+      obj.storageType,
+      gdprPolicy,
+      obj.viewType
+    )
+    field.permissions = obj.permissions.map((pObj) =>
+      PermissionFactory.fromPlainObject(pObj)
+    )
+    field.validations = obj.validations.map((vObj) =>
+      builders.validations[vObj.name].fromPlainObject(
+        vObj,
+        builders.validations
+      )
+    )
     return field
   }
 }

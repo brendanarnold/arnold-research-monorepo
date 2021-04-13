@@ -1,41 +1,38 @@
-import { Schema } from "./schema"
-import { ValidationResult } from "./validations"
-import { Json, StoredPlainObject } from '@tngbl/models'
+import { Schema } from './schema'
+import { StoredPlainObject } from '@tngbl/models'
+import { IValidationError } from '../../validations'
+import type { IBuilders } from '../../form-module'
+
+export type FormData = any
 
 /**
  * Object that contains the data alongside the schema
  */
 export class Form {
-  static type: string = 'Form'
+  static type = 'Form'
 
-  data: object = {}
+  name: string
+  data: FormData = {}
   schema: Schema
 
-
-  validate (): ValidationResult {
-    return this.schema.validate(this.getData())
+  validate(): IValidationError[] {
+    return this.schema.validate('', this.data)
   }
 
-  toPlainObj (): StoredPlainObject {
+  toPlainObj(): StoredPlainObject {
     return {
       type: Form.type,
-      data: this.getData(),
+      name: this.name,
+      data: this.data,
       schema: this.schema.toPlainObject()
     }
   }
 
-  static fromPlainObj (obj: any): Form {
+  static fromPlainObj(obj: any, builders: IBuilders): Form {
     const form = new Form()
-    form._data = obj.data
-    form.schema = Schema.fromPlainObject(obj.schema)
+    form.data = obj.data
+    form.name = obj.name
+    form.schema = Schema.fromPlainObject(obj.schema, builders)
     return form
-  }
-
-  toJson (): Json {
-    return JSON.stringify(this.toPlainObj())  
-  }
-
-  static fromJson (json: Json): Form {
-    return Form.fromPlainObj(JSON.parse(json))
   }
 }

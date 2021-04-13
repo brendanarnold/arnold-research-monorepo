@@ -1,0 +1,11 @@
+// Overrides the backend configuration
+
+{
+  "extends": "../../../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./build/browser",
+    "strictNullChecks": true,
+    "lib": ["DOM"]
+  },
+  "include": [".", "../templates"]
+}

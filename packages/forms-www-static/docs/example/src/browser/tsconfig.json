@@ -1,0 +1,14 @@
+// Overrides the backend configuration
+
+{
+  "extends": "../../../../../../tsconfig.json",
+  "compilerOptions": {
+    "module": "ES6",
+    "resolveJsonModule": false,
+    // "outFile": "../../build/script.js",
+    "outDir": "../../build/browser",
+    "strictNullChecks": true,
+    "lib": ["DOM", "ES2019"]
+  },
+  "include": [".", "../shared"]
+}

@@ -1,7 +1,7 @@
-import { Json, SemVer, IntVer } from '@tngbl/models'
+import { SemVer, IntVer } from '@tngbl/models'
 import { StoredPlainObject } from '@tngbl/models'
+import type { IBuilders } from '../../form-module'
 import { FieldSet } from './fieldset'
-
 
 /**
  * Represents the structure of a form
@@ -13,28 +13,18 @@ export class Schema extends FieldSet {
 
   schemaVersion: SemVer
 
-  toPlainObject (): StoredPlainObject {
+  toPlainObject(): StoredPlainObject {
     const obj = super.toPlainObject()
     obj.type = Schema.type
     obj.schemaVersion = this.schemaVersion
     return obj
   }
 
-  static fromPlainObject (obj: any): Schema {
-    const schema = (FieldSet.fromPlainObject(obj) as Schema)
+  static fromPlainObject(obj: any, builders: IBuilders): Schema {
+    const schema = FieldSet.fromPlainObject(obj, builders) as Schema
     schema.schemaVersion = obj.schemaVersion
     schema.name = obj.name
-    
+
     return schema
   }
-
-  toJson (): Json {
-    return JSON.stringify(this.toPlainObject(), null, 2)
-  }
-
-  static fromJson (json: Json): Schema {
-    return Schema.fromPlainObject(JSON.parse(json))
-  }
 }
-
-
