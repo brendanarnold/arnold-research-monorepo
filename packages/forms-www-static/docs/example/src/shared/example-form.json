@@ -1,0 +1,29 @@
+{
+  "type": "Form",
+  "data": {
+    "user-password": "password1"
+  },
+  "schema": {
+    "name": "main",
+    "type": "Schema",
+    "structure": [
+      {
+        "name": "user-password",
+        "label": "Your Password",
+        "type": "Field",
+        "viewType": "new-password",
+        "storageType": "STRING",
+        "gdprPolicy": {
+          "type": "GdprPolicy",
+          "dataType": "SENSITIVE_PERSONAL",
+          "lifetimeSeconds": "PERSISTENT"
+        },
+        "permissions": [],
+        "validations": []
+      }
+    ],
+    "validations": [],
+    "isRequired": true,
+    "schemaVersion": "1.0.0"
+  }
+}

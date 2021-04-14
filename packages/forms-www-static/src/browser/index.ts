@@ -38,6 +38,11 @@ export class PageValidationPlugin implements IFormModulePlugin {
     return this
   }
 
+  activateFormFromJson(json: string): void {
+    const form = this.formModule.formFromPlainObject(JSON.parse(json))
+    this.activate(form)
+  }
+
   activate(component: Form | FieldSet | Field): void {
     // @todo Get the proper polyglot instance
     const polyglot = new Polyglot()

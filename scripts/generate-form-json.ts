@@ -19,3 +19,5 @@ form.schema.structure = [
     'new-password'
   )
 ]
+
+console.log(JSON.stringify(form.toPlainObj(), null, 2))

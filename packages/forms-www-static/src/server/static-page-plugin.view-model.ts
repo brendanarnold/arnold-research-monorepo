@@ -69,10 +69,12 @@ export class FormViewModel {
   components: (SectionViewModel | FieldViewModel)[]
   data: FormData
   name: string
+  formJson: string
 
   static fromForm(form: Form): FormViewModel {
     const viewModel = new FormViewModel()
     viewModel.name = form.name
+    viewModel.formJson = JSON.stringify(form.toPlainObj())
     viewModel.components = form.schema.structure.map((item) =>
       item instanceof FieldSet
         ? SectionViewModel.fromFieldSet(
