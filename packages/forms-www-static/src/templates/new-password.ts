@@ -1,5 +1,5 @@
 import { IValidationError } from '@tngbl/forms'
-import { IPageValidationHook } from '../../browser'
+import { IPageValidationHook } from '../browser'
 
 const eventHook: IPageValidationHook = {
   componentName: 'new-password',

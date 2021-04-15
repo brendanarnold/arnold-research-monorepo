@@ -14,7 +14,7 @@
     {% if component.viewType == "Section"  %}
       {% include "section.njk" %}
     {% else %}
-      {% include "components/" + component.viewType + ".njk" %}
+      {% include component.viewType + ".njk" %}
     {% endif %}
   {% endfor %}
   <button type="submit">Save</button>

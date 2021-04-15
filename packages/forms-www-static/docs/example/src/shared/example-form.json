@@ -1,7 +1,8 @@
 {
   "type": "Form",
   "data": {
-    "user-password": "password1"
+    "user-password": "password1",
+    "my-favourite-colour": "red"
   },
   "schema": {
     "name": "main",
@@ -12,6 +13,20 @@
         "label": "Your Password",
         "type": "Field",
         "viewType": "new-password",
+        "storageType": "STRING",
+        "gdprPolicy": {
+          "type": "GdprPolicy",
+          "dataType": "SENSITIVE_PERSONAL",
+          "lifetimeSeconds": "PERSISTENT"
+        },
+        "permissions": [],
+        "validations": []
+      },
+      {
+        "name": "my-favourite-colour",
+        "label": "Favourite colour",
+        "type": "Field",
+        "viewType": "favourite-colour",
         "storageType": "STRING",
         "gdprPolicy": {
           "type": "GdprPolicy",

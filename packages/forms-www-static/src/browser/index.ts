@@ -7,7 +7,7 @@ import {
   FieldSet,
   Form
 } from '@tngbl/forms'
-import { eventHooks as coreEventHooks } from '../templates/components'
+import { eventHooks as coreEventHooks } from '../templates'
 
 export interface IPageValidationHook {
   componentName: string

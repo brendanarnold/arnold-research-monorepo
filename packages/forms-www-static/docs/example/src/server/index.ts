@@ -4,7 +4,10 @@ import * as path from 'path'
 import { FormModule } from '@tngbl/forms'
 import { StaticPageRendererPlugin } from '../../../../src/server'
 
-const forms = new FormModule().withPlugin(new StaticPageRendererPlugin())
+const plugin = new StaticPageRendererPlugin().withTemplateDir(
+  path.join(__dirname, '../templates')
+)
+const forms = new FormModule().withPlugin(plugin)
 
 const app = express()
 
