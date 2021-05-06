@@ -1,4 +1,4 @@
-import { IPageValidationHook } from '../../browser'
+import { IPageValidationHook } from '../browser'
 
 const eventHook: IPageValidationHook = {
   componentName: 'first-name',

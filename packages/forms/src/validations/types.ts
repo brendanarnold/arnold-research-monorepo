@@ -18,4 +18,5 @@ export interface IValidationError {
   dataId: string
   validationName: string
   errorName: string
+  readonly translationKey: string
 }

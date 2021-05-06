@@ -1,4 +1,4 @@
-import Polyglot from 'node-polyglot'
+import * as Polyglot from 'node-polyglot'
 import {
   FormModule,
   IValidation,
@@ -8,24 +8,32 @@ import {
   Form
 } from '@tngbl/forms'
 import { eventHooks as coreEventHooks } from '../templates'
+export { ErrorBlock } from '../templates/error-block'
+
+export interface IPageValidationHookArgs {
+  dataId: string
+  validator: IValidation
+  polyglot: Polyglot
+}
 
 export interface IPageValidationHook {
   componentName: string
-  registerHook: (
-    dataId: string,
-    validator: IValidation,
-    polyglot: Polyglot
-  ) => void
+  registerHook: (args: IPageValidationHookArgs) => void
 }
 
 export class PageValidationPlugin implements IFormModulePlugin {
   name = 'page-validation'
   formModule: FormModule
   pageValidationHooks: IPageValidationHook[] = []
+  polyglot: Polyglot
+
+  constructor(polyglot: Polyglot) {
+    this.polyglot = polyglot
+  }
 
   register(formModule: FormModule): void {
     this.formModule = formModule
-    this.formModule.plugin['page-validation'] = this
+    this.formModule.plugin[this.name] = this
   }
 
   withCore(): this {
@@ -44,9 +52,6 @@ export class PageValidationPlugin implements IFormModulePlugin {
   }
 
   activate(component: Form | FieldSet | Field): void {
-    // @todo Get the proper polyglot instance
-    const polyglot = new Polyglot()
-
     if (component instanceof Form) {
       this.activate(component.schema)
     } else if (component instanceof FieldSet) {
@@ -54,7 +59,11 @@ export class PageValidationPlugin implements IFormModulePlugin {
     } else if (component instanceof Field) {
       this.pageValidationHooks
         .find((hook) => hook.componentName === component.viewType)
-        ?.registerHook(component.name, component, polyglot)
+        ?.registerHook({
+          dataId: component.name,
+          validator: component,
+          polyglot: this.polyglot
+        })
     }
   }
 }

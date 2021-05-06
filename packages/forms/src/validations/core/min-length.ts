@@ -23,7 +23,8 @@ class MinLengthValidation implements IValidation {
         {
           dataId: id,
           validationName: builder.name,
-          errorName: 'too-short'
+          errorName: 'too-short',
+          translationKey: `validations.${builder.name}.too-short`
         }
       ]
     } else {
