@@ -13,6 +13,7 @@
         "label": "Your Password",
         "type": "Field",
         "viewType": "new-password",
+        "isRequired": true,
         "permissions": [],
         "validations": [
           {
@@ -26,6 +27,7 @@
         "label": "Favourite colour",
         "type": "Field",
         "viewType": "favourite-colour",
+        "isRequired": true,
         "permissions": [],
         "validations": []
       }

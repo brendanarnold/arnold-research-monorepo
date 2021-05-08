@@ -7,6 +7,7 @@ const coreDataTriggerBuilders = []
 export const core: IFormsBuilderPlugin = {
   register(builder) {
     builder.builders.validations.push(...coreValidationBuilders)
+    builder.builders.dataTriggers.push(...coreDataTriggerBuilders)
   },
   validations: {
     register(builder) {
@@ -15,7 +16,7 @@ export const core: IFormsBuilderPlugin = {
   } as IFormsBuilderPlugin,
   dataTriggers: {
     register(builder) {
-      builder.builders.validations.push(...coreDataTriggerBuilders)
+      builder.builders.dataTriggers.push(...coreDataTriggerBuilders)
     }
   } as IFormsBuilderPlugin
 }

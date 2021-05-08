@@ -8,8 +8,8 @@ export interface IDataTrigger {
 export interface IDataTriggerBuilder {
   name: string
   fromJson: (
-    obj: StoredPlainObject,
-    dataTriggerBuilders?: Record<string, IDataTriggerBuilder>
+    json: StoredPlainObject,
+    dataTriggerBuilders?: IDataTriggerBuilder[]
   ) => IDataTrigger
 }
 

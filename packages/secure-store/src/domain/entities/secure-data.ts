@@ -1,5 +1,4 @@
-import { StoredPlainObject } from '@tngbl/forms'
-import { utils } from '@tngbl/forms'
+import { utils, StoredPlainObject } from '@tngbl/forms'
 
 export enum GdprDataType {
   Anonymised = 'ANONYMISED',

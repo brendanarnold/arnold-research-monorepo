@@ -1,12 +1,14 @@
+export const isNullOrUndefined = (value: any): boolean =>
+  value === null || typeof value === 'undefined'
 
-export const isNullOrUndefined = value => value === null || typeof value === 'undefined'
+export const isBoolean = (value: any): boolean => typeof value === 'boolean'
 
-export const isBoolean = value => typeof value === 'boolean'
+export const hasLength = (value: any): boolean =>
+  typeof value !== 'undefined' &&
+  value !== null &&
+  Object.prototype.hasOwnProperty.call(value, 'length')
 
-export const hasLength = value => typeof value !== 'undefined'
-  && value !== null
-  && value.hasOwnProperty('length')
+export const isString = (value: any): boolean =>
+  typeof value === 'string' || value instanceof String
 
-export const isString = value => typeof value === 'string' || value instanceof String
-
-export const isNumber = value => typeof value === 'number'
+export const isNumber = (value: any): boolean => typeof value === 'number'

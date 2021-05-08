@@ -6,6 +6,7 @@ import {
 } from './types'
 import { Field } from './field'
 import type { IBuilders } from './make-form-builder'
+import { isBoolean } from './utils'
 
 /**
  * Represents a group of fields in a form
@@ -47,18 +48,28 @@ export class FieldSet {
       type: FieldSet.type,
       label: this.label,
       structure: this.structure.map((s) => s.toJson()),
-      validations: this.validations.map((v) => v.toJson())
+      validations: this.validations.map((v) => v.toJson()),
+      isRequired: isBoolean(this.isRequired)
+        ? this.isRequired
+        : (this.isRequired as IDataTrigger).toJson()
     }
   }
 
-  static fromJson(obj: any, builders: IBuilders): FieldSet {
+  static fromJson(json: any, builders: IBuilders): FieldSet {
     const fieldSet = new FieldSet()
-    fieldSet.name = obj.name
-    fieldSet.label = obj.label
-    fieldSet.validations = obj.validations.map((valObj) =>
-      builders.validations[valObj.name].fromJson(valObj, builders.validations)
+    fieldSet.name = json.name
+    fieldSet.label = json.label
+    fieldSet.validations = json.validations.map((vJson) =>
+      builders.validations
+        .find((v) => v.name === vJson.name)
+        ?.fromJson(vJson, builders.validations)
     )
-    fieldSet.structure = obj.structure.map((valObj) =>
+    fieldSet.isRequired = isBoolean(json.isRequired)
+      ? json.isRequired
+      : builders.dataTriggers
+          .find((dt) => dt.name === json.isRequired.name)
+          ?.fromJson(json.isRequired)
+    fieldSet.structure = json.structure.map((valObj) =>
       valObj.type === Field.name
         ? Field.fromJson(valObj, builders)
         : FieldSet.fromJson(valObj, builders)

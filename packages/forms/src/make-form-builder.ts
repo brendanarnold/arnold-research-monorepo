@@ -1,8 +1,13 @@
 import { Form } from './form'
-import { IValidationBuilder, StoredPlainObject } from './types'
+import {
+  IDataTriggerBuilder,
+  IValidationBuilder,
+  StoredPlainObject
+} from './types'
 
 export interface IBuilders {
   validations: IValidationBuilder[]
+  dataTriggers: IDataTriggerBuilder[]
 }
 
 export interface IFormsBuilder {
@@ -17,7 +22,7 @@ export interface IFormsBuilderPlugin {
 }
 
 export class FormsBuilder implements IFormsBuilder {
-  builders = { validations: [] }
+  builders = { validations: [], dataTriggers: [] }
 
   with(plugin: IFormsBuilderPlugin): this {
     plugin.register(this)
