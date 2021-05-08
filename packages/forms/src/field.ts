@@ -1,7 +1,6 @@
 import { IPermission } from '@tngbl/auth'
-import { StoredPlainObject } from '@tngbl/models'
 import type { IBuilders } from './make-form-builder'
-import { IValidationError, IValidation } from './types'
+import { IValidationError, IValidation, StoredPlainObject } from './types'
 
 /**
  * Represents an instance of a field in a form

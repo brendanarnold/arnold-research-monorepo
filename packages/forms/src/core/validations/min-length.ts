@@ -1,6 +1,10 @@
-import { StoredPlainObject } from '@tngbl/models'
-import { isNullOrUndefined, isNumber } from '@tngbl/utils'
-import { IValidation, IValidationBuilder, IValidationError } from '../../types'
+import { isNullOrUndefined, isNumber } from '../../utils/types'
+import {
+  IValidation,
+  IValidationBuilder,
+  IValidationError,
+  StoredPlainObject
+} from '../../types'
 import { FormData } from '../../form'
 
 interface IMeasurable {

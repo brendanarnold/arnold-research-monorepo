@@ -1,6 +1,5 @@
-import { StoredPlainObject } from '@tngbl/models'
-// import { decryptAes, isNumber } from '@tngbl/utils'
-import { isNumber } from '@tngbl/utils'
+import { StoredPlainObject } from '@tngbl/forms'
+import { utils } from '@tngbl/forms'
 
 export enum GdprDataType {
   Anonymised = 'ANONYMISED',
@@ -40,7 +39,7 @@ export class GdprPolicy {
       )
     }
     if (
-      !isNumber(obj.lifetimeSeconds) &&
+      !utils.isNumber(obj.lifetimeSeconds) &&
       !Object.values(GdprLifetime).includes(obj.lifetimeSeconds)
     ) {
       throw TypeError(

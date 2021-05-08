@@ -1,5 +1,9 @@
-import { StoredPlainObject } from '@tngbl/models'
-import { IValidation, IValidationError, IDataTrigger } from './types'
+import {
+  IValidation,
+  IValidationError,
+  IDataTrigger,
+  StoredPlainObject
+} from './types'
 import { Field } from './field'
 import type { IBuilders } from './make-form-builder'
 

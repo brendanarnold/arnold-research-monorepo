@@ -1,14 +1,13 @@
-import { StoredPlainObject } from '@tngbl/models'
 import { FormData } from './form'
 
 export interface IDataTrigger {
   isTriggered: (data: FormData) => boolean
-  toPlainObject: () => StoredPlainObject
+  toJson: () => StoredPlainObject
 }
 
 export interface IDataTriggerBuilder {
   name: string
-  fromPlainObject: (
+  fromJson: (
     obj: StoredPlainObject,
     dataTriggerBuilders?: Record<string, IDataTriggerBuilder>
   ) => IDataTrigger
@@ -35,3 +34,13 @@ export interface IValidationError {
   error: string
   validation: string
 }
+
+export type StoredPlainObject = {
+  type: string
+  [key: string]: any
+}
+
+export type UUID = string
+export type Json = string
+export type SemVer = string
+export type IntVer = number

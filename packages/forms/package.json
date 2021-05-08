@@ -15,9 +15,8 @@
   "license": "ISC",
   "dependencies": {
     "@tngbl/auth": "^1.0.0",
-    "@tngbl/models": "*",
+    "@tngbl/forms": "*",
     "@tngbl/secure-store": "*",
-    "@tngbl/utils": "^1.0.0",
     "i18n": "^0.13.2",
     "node-polyglot": "^2.4.0"
   },

@@ -1,6 +1,5 @@
-import { StoredPlainObject } from '@tngbl/models'
 import { Form } from './form'
-import { IValidationBuilder } from './types'
+import { IValidationBuilder, StoredPlainObject } from './types'
 
 export interface IBuilders {
   validations: IValidationBuilder[]

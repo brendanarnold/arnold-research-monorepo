@@ -62,7 +62,7 @@ const form = formBuilder.fromJson(json)
 const formErrors = form.validate().map((error) => error.text)
 
 const favColourErrors = form
-  .validationFor('fav-color')
+  .validatorFor('fav-color')
   .validate()
   .map((error) => error.text)
 

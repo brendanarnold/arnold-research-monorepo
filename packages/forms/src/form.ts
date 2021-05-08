@@ -1,6 +1,5 @@
 import { Schema } from './schema'
-import { StoredPlainObject } from '@tngbl/models'
-import { IValidation, IValidationError } from './types'
+import { IValidation, IValidationError, StoredPlainObject } from './types'
 import type { IBuilders } from './make-form-builder'
 import { Field } from './field'
 import { FieldSet } from './fieldset'

@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@tngbl/models": "^1.0.0"
+    "@tngbl/forms": "^1.0.0"
   },
   "devDependencies": {
     "@types/jest": "^26.0.19",

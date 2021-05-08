@@ -1,5 +1,4 @@
-import { SemVer, IntVer } from '@tngbl/models'
-import { StoredPlainObject } from '@tngbl/models'
+import { SemVer, IntVer, StoredPlainObject } from './types'
 import type { IBuilders } from './make-form-builder'
 import { FieldSet } from './fieldset'
 

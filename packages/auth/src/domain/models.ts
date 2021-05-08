@@ -1,4 +1,4 @@
-import { UUID } from '@tngbl/models'
+import { UUID } from '@tngbl/forms'
 
 export interface IGroup {
   uuid: UUID
