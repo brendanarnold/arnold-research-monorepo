@@ -1,8 +1,9 @@
-import { FormModule } from './form-module'
-
-export * from './domain/models'
-export * from './validations'
-export * from './data-triggers'
-export * from './form-module'
-
-export const forms = new FormModule()
+export { Form } from './form'
+export * from './form'
+export * from './exceptions'
+export * from './field'
+export * from './fieldset'
+export * from './schema'
+export * from './make-form-builder'
+export * from './types'
+export * from './core'

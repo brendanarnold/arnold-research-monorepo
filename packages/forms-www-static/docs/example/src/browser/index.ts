@@ -1,15 +1,13 @@
-import { forms } from '@tngbl/forms'
-import { PageValidationPlugin } from '../../../../src/browser'
+import { makeFormBuilder, core } from '@tngbl/forms'
+import { pageValidation } from '../../../../src/browser'
 import { hooks } from '../templates'
 import * as Polyglot from 'node-polyglot'
 import { phrases } from '../locales/en-gb.js'
 
 const polyglot = new Polyglot({ phrases: phrases })
 
-const plugin = new PageValidationPlugin(polyglot).withCore().withHooks(hooks)
-
-forms.withPlugin(plugin)
+const builder = makeFormBuilder().with(core).with(pageValidation({ hooks }))
 
 window['tngbl'] = {
-  forms
+  builder
 }

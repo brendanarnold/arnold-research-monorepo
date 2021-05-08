@@ -23,9 +23,9 @@
   <script src="/assets/bundle.js"></script>
   <script>
 
-  const formJson = `{{ form.formJson | safe }}`
+  const formJson = JSON.parse(`{{ form.formJson | safe }}`)
 
-  window.tngbl.forms.plugin['page-validation'].activateFormFromJson(formJson)
+  window.tngbl.builder.fromJson(formJson).bindToPage()
   </script>
 </div>
 {# {% endblock %} #}

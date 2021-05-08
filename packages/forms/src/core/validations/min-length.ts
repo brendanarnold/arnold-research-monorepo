@@ -1,13 +1,13 @@
 import { StoredPlainObject } from '@tngbl/models'
 import { isNullOrUndefined, isNumber } from '@tngbl/utils'
-import { IValidation, IValidationBuilder, IValidationError } from '../types'
-import { FormData } from '../../domain/models/form'
+import { IValidation, IValidationBuilder, IValidationError } from '../../types'
+import { FormData } from '../../form'
 
 interface IMeasurable {
   length: number
 }
 
-class MinLengthValidation implements IValidation {
+export class MinLengthValidation implements IValidation {
   length: number
 
   constructor(length: number) {
@@ -22,9 +22,11 @@ class MinLengthValidation implements IValidation {
       return [
         {
           dataId: id,
-          validationName: builder.name,
-          errorName: 'too-short',
-          translationKey: `validations.${builder.name}.too-short`
+          validation: builder.name,
+          error: 'too-short',
+          translationKey: `validations.${builder.name}.too-short`,
+          translationVars: { length: this.length },
+          text: '' // @todo
         }
       ]
     } else {
@@ -32,7 +34,7 @@ class MinLengthValidation implements IValidation {
     }
   }
 
-  toPlainObject(): StoredPlainObject {
+  toJson(): StoredPlainObject {
     return {
       type: builder.name,
       length: this.length
@@ -42,7 +44,7 @@ class MinLengthValidation implements IValidation {
 
 export const builder: IValidationBuilder = {
   name: 'MinLengthValidation',
-  fromPlainObject(obj: StoredPlainObject): IValidation {
+  fromJson(obj: StoredPlainObject): IValidation {
     const validation = new MinLengthValidation(obj.length)
     return validation
   }

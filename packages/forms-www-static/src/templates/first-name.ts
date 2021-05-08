@@ -2,16 +2,16 @@ import { IPageValidationHook } from '../browser'
 
 const eventHook: IPageValidationHook = {
   componentName: 'first-name',
-  registerHook: (dataId, validator, polyglot) => {
+  register: ({ dataId, form }) => {
     const nameInput = document.getElementsByName(dataId)[0] as HTMLInputElement
     const errorCard = document.getElementById(
       `${dataId}__error-card`
     ) as HTMLElement
 
     const onInputChange = () => {
-      const validationErrors = validator.validate(dataId, nameInput.value)
+      const errors = form.validatorFor(dataId).validate(dataId, nameInput.value)
 
-      if (validationErrors.length) {
+      if (errors.length) {
         errorCard.innerHTML = 'Error' // @todo
         errorCard.classList.remove('hidden')
       } else {

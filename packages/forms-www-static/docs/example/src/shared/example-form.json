@@ -13,26 +13,19 @@
         "label": "Your Password",
         "type": "Field",
         "viewType": "new-password",
-        "storageType": "STRING",
-        "gdprPolicy": {
-          "type": "GdprPolicy",
-          "dataType": "SENSITIVE_PERSONAL",
-          "lifetimeSeconds": "PERSISTENT"
-        },
         "permissions": [],
-        "validations": []
+        "validations": [
+          {
+            "type": "MinLengthValidation",
+            "length": 3
+          }
+        ]
       },
       {
         "name": "my-favourite-colour",
         "label": "Favourite colour",
         "type": "Field",
         "viewType": "favourite-colour",
-        "storageType": "STRING",
-        "gdprPolicy": {
-          "type": "GdprPolicy",
-          "dataType": "SENSITIVE_PERSONAL",
-          "lifetimeSeconds": "PERSISTENT"
-        },
         "permissions": [],
         "validations": []
       }

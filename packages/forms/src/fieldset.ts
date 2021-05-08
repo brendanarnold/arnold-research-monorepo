@@ -1,9 +1,7 @@
 import { StoredPlainObject } from '@tngbl/models'
-import { isBoolean } from '@tngbl/utils'
-import { IValidation, IValidationError } from '../../validations'
-import { IDataTrigger } from '../../data-triggers'
+import { IValidation, IValidationError, IDataTrigger } from './types'
 import { Field } from './field'
-import type { IBuilders } from '../../form-module'
+import type { IBuilders } from './make-form-builder'
 
 /**
  * Represents a group of fields in a form
@@ -39,40 +37,28 @@ export class FieldSet {
     return formErrors.concat(componentErrors)
   }
 
-  toPlainObject(): StoredPlainObject {
+  toJson(): StoredPlainObject {
     return {
       name: this.name,
       type: FieldSet.type,
       label: this.label,
-      structure: this.structure.map((s) => s.toPlainObject()),
-      validations: this.validations.map((v) => v.toPlainObject()),
-      isRequired: isBoolean(this.isRequired)
-        ? this.isRequired
-        : (this.isRequired as IDataTrigger).toPlainObject()
+      structure: this.structure.map((s) => s.toJson()),
+      validations: this.validations.map((v) => v.toJson())
     }
   }
 
-  static fromPlainObject(obj: any, builders: IBuilders): FieldSet {
+  static fromJson(obj: any, builders: IBuilders): FieldSet {
     const fieldSet = new FieldSet()
     fieldSet.name = obj.name
     fieldSet.label = obj.label
     fieldSet.validations = obj.validations.map((valObj) =>
-      builders.validations[valObj.name].fromPlainObject(
-        valObj,
-        builders.validations
-      )
+      builders.validations[valObj.name].fromJson(valObj, builders.validations)
     )
     fieldSet.structure = obj.structure.map((valObj) =>
-      valObj.type === Field.type
-        ? Field.fromPlainObject(valObj, builders)
-        : FieldSet.fromPlainObject(valObj, builders)
+      valObj.type === Field.name
+        ? Field.fromJson(valObj, builders)
+        : FieldSet.fromJson(valObj, builders)
     )
-    fieldSet.isRequired = isBoolean(obj.isRequired)
-      ? obj.isRequired
-      : builders.dataTriggers[obj.isRequired.name].fromPlainObject(
-          obj.isRequired,
-          builders.dataTriggers
-        )
     return fieldSet
   }
 }

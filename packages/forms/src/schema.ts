@@ -1,6 +1,6 @@
 import { SemVer, IntVer } from '@tngbl/models'
 import { StoredPlainObject } from '@tngbl/models'
-import type { IBuilders } from '../../form-module'
+import type { IBuilders } from './make-form-builder'
 import { FieldSet } from './fieldset'
 
 /**
@@ -13,17 +13,17 @@ export class Schema extends FieldSet {
 
   schemaVersion: SemVer
 
-  toPlainObject(): StoredPlainObject {
-    const obj = super.toPlainObject()
+  toJson(): StoredPlainObject {
+    const obj = super.toJson()
     obj.type = Schema.type
     obj.schemaVersion = this.schemaVersion
     return obj
   }
 
-  static fromPlainObject(obj: any, builders: IBuilders): Schema {
-    const schema = FieldSet.fromPlainObject(obj, builders) as Schema
-    schema.schemaVersion = obj.schemaVersion
-    schema.name = obj.name
+  static fromJson(json: StoredPlainObject, builders: IBuilders): Schema {
+    const schema = FieldSet.fromJson(json, builders) as Schema
+    schema.schemaVersion = json.schemaVersion
+    schema.name = json.name
 
     return schema
   }

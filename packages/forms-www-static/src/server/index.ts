@@ -1,1 +1,1 @@
-export * from './static-page-plugin'
+export { nunjucksRenderer } from './nunjucks-plugin'

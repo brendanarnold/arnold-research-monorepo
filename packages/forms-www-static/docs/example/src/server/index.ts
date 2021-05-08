@@ -1,13 +1,14 @@
 import * as express from 'express'
 import * as fs from 'fs/promises'
 import * as path from 'path'
-import { FormModule } from '@tngbl/forms'
-import { StaticPageRendererPlugin } from '../../../../src/server'
+import { makeFormBuilder, core } from '@tngbl/forms'
+import { nunjucksRenderer } from '../../../../src/server'
 
-const plugin = new StaticPageRendererPlugin().withTemplateDir(
-  path.join(__dirname, '../templates')
-)
-const forms = new FormModule().withPlugin(plugin)
+const builder = makeFormBuilder()
+  .with(core)
+  .with(
+    nunjucksRenderer({ templateDirs: [path.join(__dirname, '../templates')] })
+  )
 
 const app = express()
 
@@ -16,9 +17,9 @@ app.get('/', async (req, res) => {
     '' +
     (await fs.readFile(path.join(__dirname, '../shared/example-form.json')))
 
-  const form = forms.formFromPlainObject(JSON.parse(formJson))
+  const form = builder.fromJson(JSON.parse(formJson))
 
-  const formHtml = forms.plugin['static-page-renderer'].renderHtml(form)
+  const formHtml = form.toHtml()
 
   const html = `<!DOCTYPE html>
 <html lang="en">

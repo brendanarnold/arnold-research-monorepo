@@ -1,4 +1,54 @@
-import { Field, FieldSet, Form, FormData } from '@tngbl/forms'
+import * as path from 'path'
+import * as nunjucks from 'nunjucks'
+import {
+  Form,
+  Field,
+  FieldSet,
+  FormData,
+  IFormsBuilderPlugin
+} from '@tngbl/forms'
+
+declare module '@tngbl/forms' {
+  interface Form {
+    /**
+     * Renders the form as HTML using the given Nunjucks templates
+     *
+     * Added by the @tngbl/forms-nunjucks plugin
+     */
+    toHtml(): string
+  }
+}
+
+export interface NunjucksPluginOptions {
+  templateDirs: string[]
+}
+
+export const nunjucksRenderer = (
+  opts: NunjucksPluginOptions
+): IFormsBuilderPlugin => {
+  return {
+    register() {
+      const templateDirs = [
+        path.join(__dirname, '..', 'templates'),
+        ...(opts.templateDirs || [])
+      ]
+
+      Form.prototype.toHtml = function () {
+        nunjucks.configure(templateDirs, {
+          autoescape: true
+        })
+
+        const viewModel = {
+          form: FormViewModel.fromForm(this)
+        }
+
+        const html = nunjucks.render('form.njk', viewModel)
+
+        return html
+      }
+    }
+  }
+}
 
 class SectionViewModel {
   name: string
@@ -58,14 +108,14 @@ class FieldViewModel {
     viewModel.viewType = field.viewType
     viewModel.label = field.label
     viewModel.validationJson = JSON.stringify(
-      field.validations.map((v) => v.toPlainObject())
+      field.validations.map((v) => v.toJson())
     )
     viewModel.data = data
     return viewModel
   }
 }
 
-export class FormViewModel {
+class FormViewModel {
   components: (SectionViewModel | FieldViewModel)[]
   data: FormData
   name: string
@@ -74,7 +124,7 @@ export class FormViewModel {
   static fromForm(form: Form): FormViewModel {
     const viewModel = new FormViewModel()
     viewModel.name = form.name
-    viewModel.formJson = JSON.stringify(form.toPlainObj())
+    viewModel.formJson = JSON.stringify(form.toJson())
     viewModel.components = form.schema.structure.map((item) =>
       item instanceof FieldSet
         ? SectionViewModel.fromFieldSet(

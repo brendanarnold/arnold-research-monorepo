@@ -1,27 +1,21 @@
-import { EmailValidation, StringMaxLengthValidation, StringMinLengthValidation } from '@tngbl/forms'
-import { FieldSet, Field, Schema, StorageType } from '@tngbl/forms';
-import { GdprDataType, GdprPolicy, GdprLifetime } from '@tngbl/secure-store';
+import {
+  EmailValidation,
+  StringMaxLengthValidation,
+  StringMinLengthValidation
+} from '@tngbl/forms'
+import { FieldSet, Field, Schema } from '@tngbl/forms'
 
 const schema = new Schema()
 schema.fields = [
-  new Field('firstName', StorageType.String, new GdprPolicy(
-    GdprDataType.Anonymous, GdprLifetime.Persistent
-  ))
-    .withValidations([
-      new StringMaxLengthValidation('firstName', 6),
-      new StringMinLengthValidation('firstName', 2)
-    ]),
-  new Field('lastName', StorageType.String, new GdprPolicy(
-    GdprDataType.Anonymous, GdprLifetime.Persistent
-  ))
-    .withValidations([
-      new StringMaxLengthValidation('lastName', 6),
-      new StringMinLengthValidation('lastName', 2)
-    ]),
-  new Field('email', StorageType.String, new GdprPolicy(
-    GdprDataType.Personal, GdprLifetime.Transient
-  ))
-    .withValidations([new EmailValidation('email')]),
+  new Field('firstName').withValidations([
+    new StringMaxLengthValidation('firstName', 6),
+    new StringMinLengthValidation('firstName', 2)
+  ]),
+  new Field('lastName').withValidations([
+    new StringMaxLengthValidation('lastName', 6),
+    new StringMinLengthValidation('lastName', 2)
+  ]),
+  new Field('email').withValidations([new EmailValidation('email')])
 ]
 
 const fieldSet = new FieldSet()
@@ -33,9 +27,7 @@ fieldSet.structure = [
 ]
 fieldSet.name = 'main'
 
-schema.structure = [
-  fieldSet
-]
+schema.structure = [fieldSet]
 
 schema.name = 'P45'
 schema.schemaVersion = '0.0.1'
