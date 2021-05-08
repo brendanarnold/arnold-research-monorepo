@@ -1,6 +1,6 @@
 import * as express from 'express'
 import { Form, Schema, FieldSet, Field } from '@tngbl/forms'
-import { StaticWebRenderer } from '@tngbl/forms-www-static'
+import { StaticWebRenderer } from '@tngbl/forms-nunjucks'
 import { Monitor } from '@tngbl/monitor'
 import { StringMinLengthValidation } from '../../build/packages/forms/src'
 

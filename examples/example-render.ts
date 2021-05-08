@@ -1,4 +1,4 @@
-import { StaticWebRenderer } from '@tngbl/forms-www-static'
+import { StaticWebRenderer } from '@tngbl/forms-nunjucks'
 import { FieldSet, Form, Schema } from '@tngbl/forms'
 import { Field } from '@tngbl/forms'
 

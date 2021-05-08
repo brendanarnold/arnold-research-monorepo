@@ -1,5 +1,5 @@
 {
-  "name": "example-forms-www-static",
+  "name": "example-forms-nunjucks",
   "version": "1.0.0",
   "description": "",
   "main": "src/browser/index.ts",
