@@ -2,42 +2,62 @@ import { FormData } from './form'
 
 export interface IDataTrigger {
   isTriggered: (data: FormData) => boolean
-  toJson: () => StoredPlainObject
+  toJson(): StoredPlainObject
 }
 
 export interface IDataTriggerBuilder {
   name: string
-  fromJson: (
+  fromJson(
     json: StoredPlainObject,
     dataTriggerBuilders?: IDataTriggerBuilder[]
-  ) => IDataTrigger
+  ): IDataTrigger
+}
+
+export interface IView {
+  /**
+   * Locale e.g. 'en-gb'
+   */
+  locale: string
+  translate(item: ITranslatable): string
+  toJson(): StoredPlainObject
+}
+
+export interface IViewBuilder {
+  name: string
+  fromJson(json: StoredPlainObject, viewBuilders?: IViewBuilder[]): IView
 }
 
 export interface IValidation {
   validate: (id: string, data: FormData) => IValidationError[]
-  toJson: () => StoredPlainObject
+  toJson(): StoredPlainObject
 }
 
 export interface IValidationBuilder {
   name: string
-  fromJson: (
+  fromJson(
     json: StoredPlainObject,
     validationBuilders?: IValidationBuilder[]
-  ) => IValidation
+  ): IValidation
 }
 
-export interface IValidationError {
+export interface ITranslatable {
+  translateKey: string
+  translateVars?: Record<string, any> | undefined
+}
+
+export interface IValidationError extends ITranslatable {
   dataId: string
-  text: string
-  translationKey: string
-  translationVars: Record<string, any> | undefined
-  error: string
   validation: string
+  error: string
 }
 
-export type StoredPlainObject = {
+export interface StoredPlainObject {
   type: string
   [key: string]: any
+}
+
+export interface StringTree {
+  [key: string]: string | StringTree
 }
 
 export type UUID = string

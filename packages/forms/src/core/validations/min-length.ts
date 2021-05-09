@@ -28,9 +28,8 @@ export class MinLengthValidation implements IValidation {
           dataId: id,
           validation: builder.name,
           error: 'too-short',
-          translationKey: `validations.${builder.name}.too-short`,
-          translationVars: { length: this.length },
-          text: '' // @todo
+          translateKey: `validations.${builder.name}.too-short`,
+          translateVars: { length: this.length }
         }
       ]
     } else {

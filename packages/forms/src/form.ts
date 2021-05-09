@@ -1,5 +1,10 @@
 import { Schema } from './schema'
-import { IValidation, IValidationError, StoredPlainObject } from './types'
+import {
+  IValidation,
+  IValidationError,
+  StoredPlainObject,
+  IView
+} from './types'
 import type { IBuilders } from './make-form-builder'
 import { Field } from './field'
 import { FieldSet } from './fieldset'
@@ -15,6 +20,7 @@ export class Form {
   name: string
   data: FormData = {}
   schema: Schema
+  view: IView
 
   validate(): IValidationError[] {
     return this.schema.validate('', this.data)
@@ -51,6 +57,11 @@ export class Form {
     form.data = json.data
     form.name = json.name
     form.schema = Schema.fromJson(json.schema, builders)
+    const viewBuilder = builders.views.find(
+      (builder) => builder.name === json.view.name
+    )
+    if (!viewBuilder) throw Error(`Missing view builder '${json.view.name}'`)
+    form.view = viewBuilder.fromJson(json.view)
     return form
   }
 }

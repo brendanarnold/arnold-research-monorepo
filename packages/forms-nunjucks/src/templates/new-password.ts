@@ -14,12 +14,15 @@ const eventHook: IPageValidationHook = {
         form
           .validatorFor(dataId)
           ?.validate(dataId, inputElements[0].value)
-          .forEach((error) => errorBlock.add(error.text))
+          .forEach((error) => errorBlock.add(form.view.translate(error)))
 
         // Check if matching
         if (inputElements[0].value !== inputElements[1].value) {
-          errorBlock.add('Passwords do not match')
-          // errorKeys.push('validations.new-password.confirm-does-not-match')
+          errorBlock.add(
+            form.view.translate({
+              translateKey: 'validations.new-password.confirm-does-not-match'
+            })
+          )
         }
       }
       errorBlock.render()

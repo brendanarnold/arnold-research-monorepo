@@ -2,17 +2,15 @@ import { IPageValidationHook, ErrorBlock } from '../../../../src/browser'
 
 export const hook: IPageValidationHook = {
   componentName: 'favourite-colour',
-  register: (args) => {
-    const inputField = document.getElementsByName(
-      args.dataId
-    )[0] as HTMLInputElement
+  register: ({ dataId, form }) => {
+    const inputField = document.getElementsByName(dataId)[0] as HTMLInputElement
 
     inputField.addEventListener('input', () => {
-      const errorBlock = new ErrorBlock(args.dataId)
-      args.form
-        .validatorFor(args.dataId)
-        ?.validate(args.dataId, inputField.value)
-        .forEach((e) => errorBlock.add(e.text))
+      const errorBlock = new ErrorBlock(dataId)
+      form
+        .validatorFor(dataId)
+        ?.validate(dataId, inputField.value)
+        .forEach((e) => errorBlock.add(form.view.translate(e)))
       errorBlock.render()
     })
   }

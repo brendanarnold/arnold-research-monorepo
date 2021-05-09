@@ -34,6 +34,7 @@ interface Form {
   name: string
   data: FormData
   schema: FormSchema
+  view: FormView
   toJson(): JsonObject
 }
 
@@ -49,6 +50,15 @@ interface ValidationError {
   text: string
 }
 
+interface StringTree {
+  [key: string]: string | StringTree
+}
+
+interface FormView {
+  translations: StringTree
+  translate(item: ITranslatable)
+}
+
 const formBuilder = makeFormBuilder()
   .with(core.validations)
   .with(myValidations)
@@ -61,10 +71,14 @@ const form = formBuilder.fromJson(json)
 
 const formErrors = form.validate().map((error) => error.text)
 
+const formErrors = form.validate().map((error) => form.translate(error))
+// .map((error) => polyglot.t(error.translationKey, error.translationVars))
+
 const favColourErrors = form
   .validatorFor('fav-color')
   .validate()
-  .map((error) => error.text)
+  .map((error) => form.translate(error))
+  .map((error) => error.translateTo('en-gb'))
 
 form.schema
 form.data
