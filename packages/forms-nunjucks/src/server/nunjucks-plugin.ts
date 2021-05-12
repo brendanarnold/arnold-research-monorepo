@@ -116,9 +116,9 @@ class FieldViewModel {
 }
 
 class FormViewModel {
-  components: (SectionViewModel | FieldViewModel)[]
-  data: FormData
   name: string
+  data: FormData
+  components: (SectionViewModel | FieldViewModel)[]
   formJson: string
 
   static fromForm(form: Form): FormViewModel {

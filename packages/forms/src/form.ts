@@ -58,9 +58,9 @@ export class Form {
     form.name = json.name
     form.schema = Schema.fromJson(json.schema, builders)
     const viewBuilder = builders.views.find(
-      (builder) => builder.name === json.view.name
+      (builder) => builder.type === json.view.type
     )
-    if (!viewBuilder) throw Error(`Missing view builder '${json.view.name}'`)
+    if (!viewBuilder) throw Error(`Missing view builder '${json.view.type}'`)
     form.view = viewBuilder.fromJson(json.view)
     return form
   }

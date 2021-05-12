@@ -6,7 +6,7 @@ export interface IDataTrigger {
 }
 
 export interface IDataTriggerBuilder {
-  name: string
+  type: string
   fromJson(
     json: StoredPlainObject,
     dataTriggerBuilders?: IDataTriggerBuilder[]
@@ -23,7 +23,7 @@ export interface IView {
 }
 
 export interface IViewBuilder {
-  name: string
+  type: string
   fromJson(json: StoredPlainObject, viewBuilders?: IViewBuilder[]): IView
 }
 
@@ -33,7 +33,7 @@ export interface IValidation {
 }
 
 export interface IValidationBuilder {
-  name: string
+  type: string
   fromJson(
     json: StoredPlainObject,
     validationBuilders?: IValidationBuilder[]

@@ -52,7 +52,7 @@ export class Field {
     const isRequired = isBoolean(json.isRequired)
       ? json.isRequired
       : builders.dataTriggers
-          .find((dt) => dt.name === json.isRequired.name)
+          .find((dt) => dt.type === json.isRequired.name)
           ?.fromJson(json.isRequired)
     if (typeof isRequired === 'undefined')
       throw new Error(`DataTrigger '${json?.isRequired?.name}' not registered`)
@@ -61,7 +61,7 @@ export class Field {
 
     field.validations = json?.validations.map((vJson) => {
       const validation = builders.validations.find(
-        (v) => v.name === vJson?.type
+        (v) => v.type === vJson?.type
       )
       if (!validation)
         throw new Error(`Validation '${vJson?.type}' not registered`)

@@ -26,9 +26,9 @@ export class MinLengthValidation implements IValidation {
       return [
         {
           dataId: id,
-          validation: builder.name,
+          validation: builder.type,
           error: 'too-short',
-          translateKey: `validations.${builder.name}.too-short`,
+          translateKey: `validations.${builder.type}.too-short`,
           translateVars: { length: this.length }
         }
       ]
@@ -39,14 +39,14 @@ export class MinLengthValidation implements IValidation {
 
   toJson(): StoredPlainObject {
     return {
-      type: builder.name,
+      type: builder.type,
       length: this.length
     }
   }
 }
 
 export const builder: IValidationBuilder = {
-  name: 'MinLengthValidation',
+  type: MinLengthValidation.name,
   fromJson(obj: StoredPlainObject): IValidation {
     const validation = new MinLengthValidation(obj.length)
     return validation

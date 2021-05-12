@@ -1,4 +1,4 @@
-import { FormView, formViewBuilder } from './form-view'
+import { BasicFormView, builder } from './basic-form-view'
 
-export { FormView }
-export const coreViewBuilders = [formViewBuilder]
+export { BasicFormView }
+export const coreViewBuilders = [builder]

@@ -61,13 +61,13 @@ export class FieldSet {
     fieldSet.label = json.label
     fieldSet.validations = json.validations.map((vJson) =>
       builders.validations
-        .find((v) => v.name === vJson.name)
+        .find((v) => v.type === vJson.name)
         ?.fromJson(vJson, builders.validations)
     )
     fieldSet.isRequired = isBoolean(json.isRequired)
       ? json.isRequired
       : builders.dataTriggers
-          .find((dt) => dt.name === json.isRequired.name)
+          .find((dt) => dt.type === json.isRequired.name)
           ?.fromJson(json.isRequired)
     fieldSet.structure = json.structure.map((valObj) =>
       valObj.type === Field.name

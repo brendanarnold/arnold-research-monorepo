@@ -7,7 +7,7 @@ import {
 } from '../../types'
 import * as Polyglot from 'node-polyglot'
 
-export class FormView implements IView {
+export class BasicFormView implements IView {
   locale: string
 
   private _translations: StringTree
@@ -28,17 +28,17 @@ export class FormView implements IView {
 
   toJson(): StoredPlainObject {
     return {
-      type: FormView.name,
+      type: BasicFormView.name,
       locale: this.locale,
       translations: this._translations
     }
   }
 }
 
-export const formViewBuilder: IViewBuilder = {
-  name: FormView.name,
-  fromJson(json: StoredPlainObject): FormView {
-    const view = new FormView()
+export const builder: IViewBuilder = {
+  type: BasicFormView.name,
+  fromJson(json: StoredPlainObject): BasicFormView {
+    const view = new BasicFormView()
     view.locale = json.locale
     view.translations = json.translations
     return view
