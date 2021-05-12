@@ -48,7 +48,8 @@ export class Form {
       type: Form.type,
       name: this.name,
       data: this.data,
-      schema: this.schema.toJson()
+      schema: this.schema.toJson(),
+      view: this.view.toJson()
     }
   }
 
