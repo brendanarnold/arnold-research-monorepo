@@ -1,16 +1,16 @@
 import { FormData } from './form'
 
-export interface IDataTrigger {
-  isTriggered: (data: FormData) => boolean
+export interface ITriggerCondition {
+  isTriggered: (id: string, data: FormData) => boolean
   toJson(): StoredPlainObject
 }
 
-export interface IDataTriggerBuilder {
+export interface ITriggerConditionBuilder {
   type: string
   fromJson(
     json: StoredPlainObject,
-    dataTriggerBuilders?: IDataTriggerBuilder[]
-  ): IDataTrigger
+    dataTriggerConditionBuilders?: ITriggerConditionBuilder[]
+  ): ITriggerCondition
 }
 
 export interface IView {

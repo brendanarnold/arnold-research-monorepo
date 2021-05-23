@@ -27,7 +27,13 @@
         "label": "Favourite colour",
         "type": "Field",
         "viewType": "favourite-colour",
-        "isRequired": true,
+        "isRequired": {
+          "type": "EqualsTriggerCondition",
+          "left": {
+            "dataId": "user-password"
+          },
+          "right": "password1"
+        },
         "permissions": [],
         "validations": []
       }

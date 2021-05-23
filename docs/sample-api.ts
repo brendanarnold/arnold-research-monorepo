@@ -3,7 +3,8 @@ import {
   core,
   gdpr,
   permissions,
-  IFormsBuilderPlugin
+  IFormsBuilderPlugin,
+  IView
 } from '@tngbl/forms'
 
 const myValidations: IFormsBuilderPlugin = {
@@ -34,7 +35,7 @@ interface Form {
   name: string
   data: FormData
   schema: FormSchema
-  view: FormView
+  view: IView
   toJson(): JsonObject
 }
 
@@ -52,11 +53,6 @@ interface ValidationError {
 
 interface StringTree {
   [key: string]: string | StringTree
-}
-
-interface FormView {
-  translations: StringTree
-  translate(item: ITranslatable)
 }
 
 const formBuilder = makeFormBuilder()
@@ -80,6 +76,6 @@ const favColourErrors = form
   .map((error) => form.translate(error))
   .map((error) => error.translateTo('en-gb'))
 
-form.schema
+form.schema.isRequired.forData(form.data)
 form.data
 form.viewModel

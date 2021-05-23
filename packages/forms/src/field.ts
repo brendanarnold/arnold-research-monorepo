@@ -1,11 +1,8 @@
+import { TrueTriggerCondition } from './core/triggers/true'
 import type { IBuilders } from './make-form-builder'
-import {
-  IValidationError,
-  IValidation,
-  StoredPlainObject,
-  IDataTrigger
-} from './types'
-import { isBoolean, isNullOrUndefined } from './utils'
+import { Trigger } from './trigger'
+import { IValidationError, IValidation, StoredPlainObject } from './types'
+import { isNullOrUndefined } from './utils'
 
 /**
  * Represents an instance of a field in a form
@@ -17,7 +14,7 @@ export class Field {
     public name: string, // Unique to the FormSchema e.g. mothersFirstName
     public label: string, // e.g. Mother's first name
     public viewType: string, // Determines what component will be used for editing/displaying the field e.g. firstName
-    public isRequired: boolean | IDataTrigger = true
+    public isRequired: Trigger = Trigger.AlwaysTrue
   ) {}
 
   validate(id: string, data: FormData): IValidationError[] {
@@ -31,9 +28,10 @@ export class Field {
       type: Field.name,
       viewType: this.viewType,
       validations: this.validations.map((v) => v.toJson()),
-      isRequired: isBoolean(this.isRequired)
-        ? this.isRequired
-        : (this.isRequired as IDataTrigger).toJson()
+      isRequired:
+        this.isRequired.trigger instanceof TrueTriggerCondition
+          ? true
+          : this.isRequired.trigger.toJson()
     }
   }
 
@@ -49,15 +47,21 @@ export class Field {
     if (isNullOrUndefined(json.viewType))
       throw new Error(`Field JSON is mossing 'viewType' property`)
 
-    const isRequired = isBoolean(json.isRequired)
-      ? json.isRequired
-      : builders.dataTriggers
-          .find((dt) => dt.type === json.isRequired.name)
-          ?.fromJson(json.isRequired)
-    if (typeof isRequired === 'undefined')
-      throw new Error(`DataTrigger '${json?.isRequired?.name}' not registered`)
+    const isRequiredTrigger =
+      json.isRequired === true
+        ? new TrueTriggerCondition()
+        : builders.triggerConditions
+            .find((dt) => dt.type === json.isRequired.type)
+            ?.fromJson(json.isRequired)
+    if (typeof isRequiredTrigger === 'undefined')
+      throw new Error(`DataTrigger '${json?.isRequired?.type}' not registered`)
 
-    const field = new Field(json.name, json.label, json.viewType, isRequired)
+    const field = new Field(
+      json.name,
+      json.label,
+      json.viewType,
+      new Trigger(json.name, isRequiredTrigger)
+    )
 
     field.validations = json?.validations.map((vJson) => {
       const validation = builders.validations.find(

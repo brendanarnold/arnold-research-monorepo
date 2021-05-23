@@ -3,10 +3,12 @@ export const isNullOrUndefined = (value: any): boolean =>
 
 export const isBoolean = (value: any): boolean => typeof value === 'boolean'
 
-export const hasLength = (value: any): boolean =>
-  typeof value !== 'undefined' &&
-  value !== null &&
-  Object.prototype.hasOwnProperty.call(value, 'length')
+export const hasProperty = (obj: any, prop: string): boolean =>
+  typeof obj !== 'undefined' &&
+  obj !== null &&
+  Object.prototype.hasOwnProperty.call(obj, prop)
+
+export const hasLength = (value: any): boolean => hasProperty(value, 'length')
 
 export const isString = (value: any): boolean =>
   typeof value === 'string' || value instanceof String

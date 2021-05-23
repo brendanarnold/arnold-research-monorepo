@@ -1,12 +1,8 @@
-import {
-  IValidation,
-  IValidationError,
-  IDataTrigger,
-  StoredPlainObject
-} from './types'
+import { IValidation, IValidationError, StoredPlainObject } from './types'
 import { Field } from './field'
 import type { IBuilders } from './make-form-builder'
-import { isBoolean } from './utils'
+import { Trigger } from './trigger'
+import { TrueTriggerCondition } from './core/triggers/true'
 
 /**
  * Represents a group of fields in a form
@@ -17,7 +13,7 @@ export class FieldSet {
   label: string // e.g. Next of kin details
   structure: (Field | FieldSet)[] = []
   validations: IValidation[] = []
-  isRequired: IDataTrigger | boolean = true
+  isRequired: Trigger = Trigger.AlwaysTrue
 
   withDataSets(dataSets: FieldSet[]): FieldSet {
     this.structure.push(...dataSets)
@@ -49,9 +45,10 @@ export class FieldSet {
       label: this.label,
       structure: this.structure.map((s) => s.toJson()),
       validations: this.validations.map((v) => v.toJson()),
-      isRequired: isBoolean(this.isRequired)
-        ? this.isRequired
-        : (this.isRequired as IDataTrigger).toJson()
+      isRequired:
+        this.isRequired instanceof TrueTriggerCondition
+          ? true
+          : this.isRequired.trigger.toJson()
     }
   }
 
@@ -64,11 +61,20 @@ export class FieldSet {
         .find((v) => v.type === vJson.name)
         ?.fromJson(vJson, builders.validations)
     )
-    fieldSet.isRequired = isBoolean(json.isRequired)
-      ? json.isRequired
-      : builders.dataTriggers
-          .find((dt) => dt.type === json.isRequired.name)
-          ?.fromJson(json.isRequired)
+    const trigger =
+      json.isRequired === true
+        ? new TrueTriggerCondition()
+        : builders.triggerConditions
+            .find((dt) => dt.type === json.isRequired.type)
+            ?.fromJson(json.isRequired)
+
+    if (!trigger) {
+      throw new TypeError(
+        `Could not find trigger builder '${json.isRequired.type}'`
+      )
+    }
+
+    fieldSet.isRequired = new Trigger(json.name, trigger)
     fieldSet.structure = json.structure.map((valObj) =>
       valObj.type === Field.name
         ? Field.fromJson(valObj, builders)

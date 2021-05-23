@@ -1,3 +1,3 @@
 export * from './validations'
-export * from './data-triggers'
+export * from './triggers'
 export * from './core-plugin'
