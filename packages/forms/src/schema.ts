@@ -1,14 +1,26 @@
-import { SemVer, IntVer, StoredPlainObject } from './types'
+import { SemVer, IntVer, StoredPlainObject } from './@types'
 import type { IBuilders } from './make-form-builder'
 import { FieldSet } from './fieldset'
+
+class PluginDependency {
+  name: string
+  version: string
+
+  toJson(): StoredPlainObject {
+    return {
+      type: PluginDependency.name,
+      name: this.name,
+      version: this.version
+    }
+  }
+}
 
 /**
  * Represents the structure of a form
  */
 export class Schema extends FieldSet {
-  /** Increment when make a breaking change to persistence marshalling */
-  static readonly storageVersion: IntVer = 1
   static readonly type: string = 'Schema'
+  dependencies: PluginDependency[] = []
 
   schemaVersion: SemVer
 

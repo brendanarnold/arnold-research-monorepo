@@ -8,8 +8,10 @@ import {
 } from '@tngbl/forms'
 
 const myValidations: IFormsBuilderPlugin = {
+  name: 'myValidations',
+  version: '0.0.0',
   register(builder) {
-    builder.builders.validations.push(
+    builder.builders.validationConditions.push(
       ...[
         // @todo Some custom validation builders here ...
       ]
@@ -51,8 +53,10 @@ interface ValidationError {
   text: string
 }
 
-interface StringTree {
-  [key: string]: string | StringTree
+type Storable = string | number | boolean | null | undefined
+
+interface KeyedStorables {
+  [key: string]: Storable | Storable[] | KeyedStorables
 }
 
 const formBuilder = makeFormBuilder()
@@ -61,21 +65,22 @@ const formBuilder = makeFormBuilder()
   .with(gdpr)
   .with(permissions)
 
-const json = {} // @todo Some form Json
+const json = { type: 'Form' } // @todo Some form Json
 
 const form = formBuilder.fromJson(json)
 
-const formErrors = form.validate().map((error) => error.text)
-
-const formErrors = form.validate().map((error) => form.translate(error))
-// .map((error) => polyglot.t(error.translationKey, error.translationVars))
+const formErrors = form.validator
+  .validate()
+  .map((error) => form.view.translate(error))
 
 const favColourErrors = form
   .validatorFor('fav-color')
   .validate()
-  .map((error) => form.translate(error))
-  .map((error) => error.translateTo('en-gb'))
+  .map((error) => form.view.translate(error))
 
+form.schema.itemFor('fav-color').isRequired.forData(form.data)
+
+form.view.locale
 form.schema.isRequired.forData(form.data)
 form.data
-form.viewModel
+form.view

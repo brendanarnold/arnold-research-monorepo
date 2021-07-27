@@ -1,5 +1,6 @@
 import { IFormsBuilderPlugin, Form, FieldSet, Field } from '@tngbl/forms'
 import { eventHooks as coreEventHooks } from '../templates'
+import { version, name } from '../../package.json'
 
 declare module '@tngbl/forms' {
   interface Form {
@@ -32,6 +33,8 @@ export const pageValidation = (
   const hooks = [...coreEventHooks, ...(opts.hooks || [])]
 
   return {
+    name: `${name}/page-validation`,
+    version,
     register(): void {
       Form.prototype.bindToPage = function () {
         const _bind = (component: Form | FieldSet | Field): void => {

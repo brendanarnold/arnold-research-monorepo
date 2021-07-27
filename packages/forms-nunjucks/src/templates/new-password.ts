@@ -13,7 +13,7 @@ const eventHook: IPageValidationHook = {
       if (confirmTouched) {
         form
           .validatorFor(dataId)
-          ?.validate(dataId, inputElements[0].value)
+          ?.validate(inputElements[0].value)
           .forEach((error) => errorBlock.add(form.view.translate(error)))
 
         // Check if matching

@@ -4,7 +4,7 @@
   "extends": "../../../../../../tsconfig.json",
   "compilerOptions": {
     "module": "ES6",
-    "resolveJsonModule": false,
+    "resolveJsonModule": true,
     // "outFile": "../../build/script.js",
     "outDir": "../../build/browser",
     "strictNullChecks": true,

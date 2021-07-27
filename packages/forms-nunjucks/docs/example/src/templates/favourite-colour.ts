@@ -1,4 +1,3 @@
-import { findInForm } from '@tngbl/forms/src/utils/find'
 import { IPageValidationHook, ErrorBlock } from '../../../../src/browser'
 
 export const hook: IPageValidationHook = {
@@ -10,7 +9,7 @@ export const hook: IPageValidationHook = {
       const errorBlock = new ErrorBlock(dataId)
       form
         .validatorFor(dataId)
-        ?.validate(dataId, inputField.value)
+        ?.validate(inputField.value)
         .forEach((e) => errorBlock.add(form.view.translate(e)))
       errorBlock.render()
     })

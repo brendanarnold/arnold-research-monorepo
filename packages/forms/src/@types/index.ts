@@ -1,4 +1,4 @@
-import { FormData } from './form'
+import { FormData } from '../form'
 
 export interface ITriggerCondition {
   isTriggered: (id: string, data: FormData) => boolean
@@ -27,17 +27,17 @@ export interface IViewBuilder {
   fromJson(json: StoredPlainObject, viewBuilders?: IViewBuilder[]): IView
 }
 
-export interface IValidation {
-  validate: (id: string, data: FormData) => IValidationError[]
+export interface IValidationCondition {
+  validate: (id: string | undefined, data: FormData) => IValidationError[]
   toJson(): StoredPlainObject
 }
 
-export interface IValidationBuilder {
+export interface IValidationConditionBuilder {
   type: string
   fromJson(
     json: StoredPlainObject,
-    validationBuilders?: IValidationBuilder[]
-  ): IValidation
+    validationBuilders?: IValidationConditionBuilder[]
+  ): IValidationCondition
 }
 
 export interface ITranslatable {

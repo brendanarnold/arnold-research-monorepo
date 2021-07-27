@@ -2,7 +2,7 @@ import {
   ITriggerCondition,
   ITriggerConditionBuilder,
   StoredPlainObject
-} from '../../types'
+} from '../../@types'
 import { FormData } from '../../form'
 import { findInData } from '../../utils/find'
 import { hasProperty } from '../../utils'
@@ -53,8 +53,7 @@ export class EqualsTriggerCondition implements ITriggerCondition {
 
 export const builder: ITriggerConditionBuilder = {
   type: EqualsTriggerCondition.name,
-  fromJson(json, builders): EqualsTriggerCondition {
-    const trigger = new EqualsTriggerCondition(json.left, json.right)
-    return trigger
+  fromJson(json, _builders): EqualsTriggerCondition {
+    return new EqualsTriggerCondition(json.left, json.right)
   }
 }

@@ -1,8 +1,13 @@
-import { IValidation, IValidationError, StoredPlainObject } from './types'
+import {
+  IValidationCondition,
+  IValidationError,
+  StoredPlainObject
+} from './@types'
 import { Field } from './field'
 import type { IBuilders } from './make-form-builder'
 import { Trigger } from './trigger'
 import { TrueTriggerCondition } from './core/triggers/true'
+import { findInForm } from './utils/find'
 
 /**
  * Represents a group of fields in a form
@@ -12,21 +17,20 @@ export class FieldSet {
   name: string // e.g. nextOfKinDetails
   label: string // e.g. Next of kin details
   structure: (Field | FieldSet)[] = []
-  validations: IValidation[] = []
+  validationConditions: IValidationCondition[] = []
   isRequired: Trigger = Trigger.AlwaysTrue
 
-  withDataSets(dataSets: FieldSet[]): FieldSet {
-    this.structure.push(...dataSets)
-    return this
+  itemFor(dataId: string): Field | FieldSet | undefined {
+    return findInForm(this, dataId)
   }
 
-  withValidations(validations: IValidation[]): FieldSet {
-    this.validations.push(...validations)
+  withValidations(validations: IValidationCondition[]): FieldSet {
+    this.validationConditions.push(...validations)
     return this
   }
 
   validate(id: string, data: any): IValidationError[] {
-    const formErrors = this.validations
+    const formErrors = this.validationConditions
       .map((validation) => validation.validate(id, data))
       .flat()
     const componentErrors = this.structure
@@ -44,7 +48,7 @@ export class FieldSet {
       type: FieldSet.type,
       label: this.label,
       structure: this.structure.map((s) => s.toJson()),
-      validations: this.validations.map((v) => v.toJson()),
+      validationConditions: this.validationConditions.map((v) => v.toJson()),
       isRequired:
         this.isRequired instanceof TrueTriggerCondition
           ? true
@@ -56,10 +60,10 @@ export class FieldSet {
     const fieldSet = new FieldSet()
     fieldSet.name = json.name
     fieldSet.label = json.label
-    fieldSet.validations = json.validations.map((vJson) =>
-      builders.validations
+    fieldSet.validationConditions = json.validationConditions.map((vJson) =>
+      builders.validationConditions
         .find((v) => v.type === vJson.name)
-        ?.fromJson(vJson, builders.validations)
+        ?.fromJson(vJson, builders.validationConditions)
     )
     const trigger =
       json.isRequired === true

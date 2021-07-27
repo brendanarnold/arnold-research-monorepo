@@ -7,6 +7,7 @@ import {
   FormData,
   IFormsBuilderPlugin
 } from '@tngbl/forms'
+import { name, version } from '../../package.json'
 
 declare module '@tngbl/forms' {
   interface Form {
@@ -27,6 +28,8 @@ export const nunjucksRenderer = (
   opts: NunjucksPluginOptions
 ): IFormsBuilderPlugin => {
   return {
+    name: `${name}/nunjucks`,
+    version,
     register() {
       const templateDirs = [
         path.join(__dirname, '..', 'templates'),
@@ -108,7 +111,7 @@ class FieldViewModel {
     viewModel.viewType = field.viewType
     viewModel.label = field.label
     viewModel.validationJson = JSON.stringify(
-      field.validations.map((v) => v.toJson())
+      field.validationConditions.map((v) => v.toJson())
     )
     viewModel.data = data
     return viewModel

@@ -4,7 +4,7 @@ import {
   StringTree,
   IView,
   IViewBuilder
-} from '../../types'
+} from '../../@types'
 import * as Polyglot from 'node-polyglot'
 
 export class BasicFormView implements IView {

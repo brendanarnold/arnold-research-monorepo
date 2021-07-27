@@ -2,7 +2,7 @@ import {
   ITriggerCondition,
   ITriggerConditionBuilder,
   StoredPlainObject
-} from '../../types'
+} from '../../@types'
 
 export class FalseTriggerCondition implements ITriggerCondition {
   isTriggered(): boolean {

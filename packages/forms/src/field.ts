@@ -1,14 +1,18 @@
 import { TrueTriggerCondition } from './core/triggers/true'
 import type { IBuilders } from './make-form-builder'
 import { Trigger } from './trigger'
-import { IValidationError, IValidation, StoredPlainObject } from './types'
+import {
+  IValidationError,
+  IValidationCondition,
+  StoredPlainObject
+} from './@types'
 import { isNullOrUndefined } from './utils'
 
 /**
  * Represents an instance of a field in a form
  */
 export class Field {
-  validations: IValidation[] = []
+  validationConditions: IValidationCondition[] = []
 
   constructor(
     public name: string, // Unique to the FormSchema e.g. mothersFirstName
@@ -18,7 +22,7 @@ export class Field {
   ) {}
 
   validate(id: string, data: FormData): IValidationError[] {
-    return this.validations.map((v) => v.validate(id, data)).flat()
+    return this.validationConditions.map((v) => v.validate(id, data)).flat()
   }
 
   toJson(): StoredPlainObject {
@@ -27,7 +31,7 @@ export class Field {
       label: this.label,
       type: Field.name,
       viewType: this.viewType,
-      validations: this.validations.map((v) => v.toJson()),
+      validationConditions: this.validationConditions.map((v) => v.toJson()),
       isRequired:
         this.isRequired.trigger instanceof TrueTriggerCondition
           ? true
@@ -38,8 +42,10 @@ export class Field {
   static fromJson(json: any, builders: IBuilders): Field {
     if (isNullOrUndefined(json.isRequired))
       throw new Error(`Field JSON missing 'isRequired' property`)
-    if (!Array.isArray(json.validations))
-      throw new Error(`Field JSON 'validations' property is not an array`)
+    if (!Array.isArray(json.validationConditions))
+      throw new Error(
+        `Field JSON 'validationConditions' property is not an array`
+      )
     if (isNullOrUndefined(json.name))
       throw new Error(`Field JSON is missing 'name' property`)
     if (isNullOrUndefined(json.label))
@@ -63,13 +69,13 @@ export class Field {
       new Trigger(json.name, isRequiredTrigger)
     )
 
-    field.validations = json?.validations.map((vJson) => {
-      const validation = builders.validations.find(
+    field.validationConditions = json?.validationConditions.map((vJson) => {
+      const builder = builders.validationConditions.find(
         (v) => v.type === vJson?.type
       )
-      if (!validation)
+      if (!builder)
         throw new Error(`Validation '${vJson?.type}' not registered`)
-      return validation.fromJson(vJson, builders.validations)
+      return builder.fromJson(vJson, builders.validationConditions)
     })
     return field
   }

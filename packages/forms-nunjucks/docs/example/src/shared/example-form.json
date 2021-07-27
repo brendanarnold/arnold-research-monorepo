@@ -15,7 +15,7 @@
         "viewType": "new-password",
         "isRequired": true,
         "permissions": [],
-        "validations": [
+        "validationConditions": [
           {
             "type": "MinLengthValidation",
             "length": 3
@@ -35,10 +35,10 @@
           "right": "password1"
         },
         "permissions": [],
-        "validations": []
+        "validationConditions": []
       }
     ],
-    "validations": [],
+    "validationConditions": [],
     "isRequired": true,
     "schemaVersion": "1.0.0"
   },
@@ -46,7 +46,7 @@
     "type": "BasicFormView",
     "locale": "en-gb",
     "translations": {
-      "validations": {
+      "validationConditions": {
         "is-string": {
           "is-not-string": "Please input text"
         },

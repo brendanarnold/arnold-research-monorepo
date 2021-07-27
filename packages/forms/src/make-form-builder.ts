@@ -1,13 +1,13 @@
 import { Form } from './form'
 import {
   ITriggerConditionBuilder,
-  IValidationBuilder,
+  IValidationConditionBuilder,
   StoredPlainObject,
   IViewBuilder
-} from './types'
+} from './@types'
 
 export interface IBuilders {
-  validations: IValidationBuilder[]
+  validationConditions: IValidationConditionBuilder[]
   triggerConditions: ITriggerConditionBuilder[]
   views: IViewBuilder[]
 }
@@ -19,12 +19,14 @@ export interface IFormsBuilder {
 }
 
 export interface IFormsBuilderPlugin {
+  name: string
+  version: string
   register(builder: IFormsBuilder): void
   [field: string]: any
 }
 
 export class FormsBuilder implements IFormsBuilder {
-  builders = { validations: [], triggerConditions: [], views: [] }
+  builders = { validationConditions: [], triggerConditions: [], views: [] }
 
   with(plugin: IFormsBuilderPlugin): this {
     plugin.register(this)

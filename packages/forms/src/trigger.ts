@@ -1,4 +1,4 @@
-import { ITriggerCondition } from './types'
+import { ITriggerCondition } from './@types'
 import { FormData } from './form'
 import { TrueTriggerCondition } from './core/triggers/true'
 

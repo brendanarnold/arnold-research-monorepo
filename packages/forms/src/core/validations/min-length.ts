@@ -1,17 +1,17 @@
 import { isNullOrUndefined, isNumber } from '../../utils/types'
 import {
-  IValidation,
-  IValidationBuilder,
+  IValidationCondition,
+  IValidationConditionBuilder,
   IValidationError,
   StoredPlainObject
-} from '../../types'
+} from '../../@types'
 import { FormData } from '../../form'
 
 interface IMeasurable {
   length: number
 }
 
-export class MinLengthValidation implements IValidation {
+export class MinLengthValidation implements IValidationCondition {
   length: number
 
   constructor(length: number) {
@@ -45,9 +45,9 @@ export class MinLengthValidation implements IValidation {
   }
 }
 
-export const builder: IValidationBuilder = {
+export const builder: IValidationConditionBuilder = {
   type: MinLengthValidation.name,
-  fromJson(obj: StoredPlainObject): IValidation {
+  fromJson(obj: StoredPlainObject): IValidationCondition {
     const validation = new MinLengthValidation(obj.length)
     return validation
   }

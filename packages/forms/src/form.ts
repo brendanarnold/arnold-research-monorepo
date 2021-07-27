@@ -1,13 +1,15 @@
 import { Schema } from './schema'
 import {
-  IValidation,
+  IValidationCondition,
   IValidationError,
   StoredPlainObject,
   IView
-} from './types'
+} from './@types'
 import type { IBuilders } from './make-form-builder'
 import { Field } from './field'
 import { FieldSet } from './fieldset'
+import { Validator } from './validator'
+import { findInForm } from './utils/find'
 
 export type FormData = any
 
@@ -22,25 +24,16 @@ export class Form {
   schema: Schema
   view: IView
 
-  validate(): IValidationError[] {
-    return this.schema.validate('', this.data)
+  get validator(): Validator {
+    return new Validator(this.schema.validationConditions, undefined, this.data)
   }
 
-  validator(): IValidation {
-    return this.schema
-  }
-
-  validatorFor(dataId: string): IValidation | undefined {
-    const _findElement = (elements: (Field | FieldSet)[]) => {
-      for (const element of elements) {
-        if (element.name === dataId) return element
-        if (element instanceof FieldSet) {
-          const res = _findElement(element.structure)
-          if (res) return res
-        }
-      }
-    }
-    return _findElement(this.schema.structure)
+  validatorFor(dataId: string): Validator | undefined {
+    const validationConditions = findInForm(this.schema, dataId)
+      ?.validationConditions
+    return validationConditions
+      ? new Validator(validationConditions, dataId)
+      : undefined
   }
 
   toJson(): StoredPlainObject {
