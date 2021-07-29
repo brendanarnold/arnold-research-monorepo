@@ -59,6 +59,15 @@ export class FieldSet {
 
   static fromJson(json: any, builders: Builder[]): FieldSet {
     const fieldSet = new FieldSet()
+    return FieldSet._populateFromJson(fieldSet, json, builders)
+  }
+
+  /** Used by Schema to populate itself */
+  protected static _populateFromJson(
+    fieldSet: FieldSet,
+    json: any,
+    builders: Builder[]
+  ): FieldSet {
     fieldSet.name = json.name
     fieldSet.label = json.label
     fieldSet.validationConditions = json.validationConditions.map((vJson) =>

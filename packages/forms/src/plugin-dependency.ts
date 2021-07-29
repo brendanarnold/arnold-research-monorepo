@@ -2,8 +2,8 @@ import { StoredPlainObject } from './@types'
 
 export class PluginDependency {
   constructor(
-    public fromPackage: string,
     public name: string,
+    public fromPackage: string,
     public version: string
   ) {}
 

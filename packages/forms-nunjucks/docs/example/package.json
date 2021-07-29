@@ -7,7 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
-    "start": "npm run build; npx ts-node src/server/index.ts"
+    "start": "npm run build; node --inspect -r ts-node/register src/server/index.ts"
   },
   "author": "",
   "license": "ISC",

@@ -25,13 +25,13 @@ export class Schema extends FieldSet {
   }
 
   static fromJson(json: StoredPlainObject, builders: Builder[]): Schema {
-    const schema = FieldSet.fromJson(json, builders) as Schema
+    let schema = new Schema()
+    schema = super._populateFromJson(schema, json, builders) as Schema
     schema.schemaVersion = json.schemaVersion
     schema.name = json.name
     schema.dependencies = json.dependencies.map((depJson) =>
       PluginDependency.fromJson(depJson)
     )
-
     return schema
   }
 }
