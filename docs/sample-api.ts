@@ -8,13 +8,17 @@ import {
 } from '@tngbl/forms'
 
 const myValidations: IFormsBuilderPlugin = {
+  fromPackage: '@tngbl/forms-nunjucks',
   name: 'myValidations',
   version: '0.0.0',
   register(builder) {
-    builder.builders.validationConditions.push(
-      ...[
+    builder.withBuilders(
+      [
         // @todo Some custom validation builders here ...
-      ]
+      ],
+      'myValidations',
+      '@tngbl/forms-nunjucks',
+      '0.0.0'
     )
   }
 }

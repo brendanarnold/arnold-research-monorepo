@@ -33,7 +33,8 @@ export const pageValidation = (
   const hooks = [...coreEventHooks, ...(opts.hooks || [])]
 
   return {
-    name: `${name}/page-validation`,
+    name: `page-validation`,
+    fromPackage: name,
     version,
     register(): void {
       Form.prototype.bindToPage = function () {

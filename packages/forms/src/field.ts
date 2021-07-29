@@ -1,10 +1,11 @@
 import { TrueTriggerCondition } from './core/triggers/true'
-import type { IBuilders } from './make-form-builder'
 import { Trigger } from './trigger'
 import {
   IValidationError,
   IValidationCondition,
-  StoredPlainObject
+  StoredPlainObject,
+  Builder,
+  ITriggerCondition
 } from './@types'
 import { isNullOrUndefined } from './utils'
 
@@ -39,7 +40,7 @@ export class Field {
     }
   }
 
-  static fromJson(json: any, builders: IBuilders): Field {
+  static fromJson(json: any, builders: Builder[]): Field {
     if (isNullOrUndefined(json.isRequired))
       throw new Error(`Field JSON missing 'isRequired' property`)
     if (!Array.isArray(json.validationConditions))
@@ -56,7 +57,7 @@ export class Field {
     const isRequiredTrigger =
       json.isRequired === true
         ? new TrueTriggerCondition()
-        : builders.triggerConditions
+        : builders
             .find((dt) => dt.type === json.isRequired.type)
             ?.fromJson(json.isRequired)
     if (typeof isRequiredTrigger === 'undefined')
@@ -66,16 +67,14 @@ export class Field {
       json.name,
       json.label,
       json.viewType,
-      new Trigger(json.name, isRequiredTrigger)
+      new Trigger(json.name, isRequiredTrigger as ITriggerCondition)
     )
 
     field.validationConditions = json?.validationConditions.map((vJson) => {
-      const builder = builders.validationConditions.find(
-        (v) => v.type === vJson?.type
-      )
+      const builder = builders.find((v) => v.type === vJson?.type)
       if (!builder)
         throw new Error(`Validation '${vJson?.type}' not registered`)
-      return builder.fromJson(vJson, builders.validationConditions)
+      return builder.fromJson(vJson, builders)
     })
     return field
   }

@@ -2,39 +2,60 @@ import { IFormsBuilderPlugin } from '../make-form-builder'
 import { coreValidationBuilders } from './validations'
 import { coreTriggerConditionBuilders } from './triggers'
 import { coreViewBuilders } from './views'
-import { version, name } from '../../package.json'
+import { version, name as pkgName } from '../../package.json'
 
 export const core: IFormsBuilderPlugin & {
   validations: IFormsBuilderPlugin
   dataTriggers: IFormsBuilderPlugin
   views: IFormsBuilderPlugin
 } = {
-  name: `${name}/core`,
+  name: `core`,
   version,
+  fromPackage: pkgName,
   register(builder) {
-    builder.builders.validationConditions.push(...coreValidationBuilders)
-    builder.builders.triggerConditions.push(...coreTriggerConditionBuilders)
-    builder.builders.views.push(...coreViewBuilders)
+    builder.withBuilders(
+      [
+        ...coreValidationBuilders,
+        ...coreTriggerConditionBuilders,
+        ...coreViewBuilders
+      ],
+      'core',
+      pkgName,
+      version
+    )
   },
   validations: {
-    name: `${name}/core/validations`,
+    name: `core.validations`,
     version,
+    fromPackage: pkgName,
     register(builder) {
-      builder.builders.validationConditions.push(...coreValidationBuilders)
+      builder.withBuilders(
+        coreValidationBuilders,
+        'core.validations',
+        pkgName,
+        version
+      )
     }
   },
   dataTriggers: {
-    name: `${name}/core/dataTriggers`,
+    name: `core.dataTriggers`,
     version,
+    fromPackage: pkgName,
     register(builder) {
-      builder.builders.triggerConditions.push(...coreTriggerConditionBuilders)
+      builder.withBuilders(
+        coreTriggerConditionBuilders,
+        'core.dataTriggers',
+        pkgName,
+        version
+      )
     }
   },
   views: {
-    name: `${name}/core/views`,
+    name: `core.views`,
     version,
+    fromPackage: pkgName,
     register(builder) {
-      builder.builders.views.push(...coreViewBuilders)
+      builder.withBuilders(coreViewBuilders, 'core.views', pkgName, version)
     }
   }
 }

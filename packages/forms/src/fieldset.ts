@@ -1,10 +1,11 @@
 import {
   IValidationCondition,
   IValidationError,
-  StoredPlainObject
+  StoredPlainObject,
+  Builder,
+  ITriggerCondition
 } from './@types'
 import { Field } from './field'
-import type { IBuilders } from './make-form-builder'
 import { Trigger } from './trigger'
 import { TrueTriggerCondition } from './core/triggers/true'
 import { findInForm } from './utils/find'
@@ -56,19 +57,17 @@ export class FieldSet {
     }
   }
 
-  static fromJson(json: any, builders: IBuilders): FieldSet {
+  static fromJson(json: any, builders: Builder[]): FieldSet {
     const fieldSet = new FieldSet()
     fieldSet.name = json.name
     fieldSet.label = json.label
     fieldSet.validationConditions = json.validationConditions.map((vJson) =>
-      builders.validationConditions
-        .find((v) => v.type === vJson.name)
-        ?.fromJson(vJson, builders.validationConditions)
+      builders.find((v) => v.type === vJson.name)?.fromJson(vJson, builders)
     )
     const trigger =
       json.isRequired === true
         ? new TrueTriggerCondition()
-        : builders.triggerConditions
+        : builders
             .find((dt) => dt.type === json.isRequired.type)
             ?.fromJson(json.isRequired)
 
@@ -78,7 +77,7 @@ export class FieldSet {
       )
     }
 
-    fieldSet.isRequired = new Trigger(json.name, trigger)
+    fieldSet.isRequired = new Trigger(json.name, trigger as ITriggerCondition)
     fieldSet.structure = json.structure.map((valObj) =>
       valObj.type === Field.name
         ? Field.fromJson(valObj, builders)

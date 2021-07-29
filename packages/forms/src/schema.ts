@@ -1,5 +1,4 @@
-import { SemVer, StoredPlainObject } from './@types'
-import type { IBuilders } from './make-form-builder'
+import { SemVer, StoredPlainObject, Builder } from './@types'
 import { FieldSet } from './fieldset'
 import { PluginDependency } from './plugin-dependency'
 
@@ -25,7 +24,7 @@ export class Schema extends FieldSet {
     return obj
   }
 
-  static fromJson(json: StoredPlainObject, builders: IBuilders): Schema {
+  static fromJson(json: StoredPlainObject, builders: Builder[]): Schema {
     const schema = FieldSet.fromJson(json, builders) as Schema
     schema.schemaVersion = json.schemaVersion
     schema.name = json.name

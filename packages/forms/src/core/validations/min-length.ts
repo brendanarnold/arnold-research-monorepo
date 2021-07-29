@@ -26,9 +26,9 @@ export class MinLengthValidation implements IValidationCondition {
       return [
         {
           dataId: id,
-          validation: builder.type,
+          validation: MinLengthValidation.name,
           error: 'too-short',
-          translateKey: `validations.${builder.type}.too-short`,
+          translateKey: `validations.${MinLengthValidation.name}.too-short`,
           translateVars: { length: this.length }
         }
       ]
@@ -39,7 +39,7 @@ export class MinLengthValidation implements IValidationCondition {
 
   toJson(): StoredPlainObject {
     return {
-      type: builder.type,
+      type: MinLengthValidation.name,
       length: this.length
     }
   }

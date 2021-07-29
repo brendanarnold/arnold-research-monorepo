@@ -1,13 +1,5 @@
 import { Schema } from './schema'
-import {
-  IValidationCondition,
-  IValidationError,
-  StoredPlainObject,
-  IView
-} from './@types'
-import type { IBuilders } from './make-form-builder'
-import { Field } from './field'
-import { FieldSet } from './fieldset'
+import { StoredPlainObject, Builder, IView } from './@types'
 import { Validator } from './validator'
 import { findInForm } from './utils/find'
 
@@ -46,16 +38,16 @@ export class Form {
     }
   }
 
-  static fromJson(json: any, builders: IBuilders): Form {
+  static fromJson(json: any, builders: Builder[]): Form {
     const form = new Form()
     form.data = json.data
     form.name = json.name
     form.schema = Schema.fromJson(json.schema, builders)
-    const viewBuilder = builders.views.find(
+    const viewBuilder = builders.find(
       (builder) => builder.type === json.view.type
     )
     if (!viewBuilder) throw Error(`Missing view builder '${json.view.type}'`)
-    form.view = viewBuilder.fromJson(json.view)
+    form.view = viewBuilder.fromJson(json.view) as IView
     return form
   }
 }

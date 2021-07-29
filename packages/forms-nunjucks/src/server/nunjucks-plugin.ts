@@ -28,8 +28,9 @@ export const nunjucksRenderer = (
   opts: NunjucksPluginOptions
 ): IFormsBuilderPlugin => {
   return {
-    name: `${name}/nunjucks`,
+    name: `nunjucks`,
     version,
+    fromPackage: 'name',
     register() {
       const templateDirs = [
         path.join(__dirname, '..', 'templates'),

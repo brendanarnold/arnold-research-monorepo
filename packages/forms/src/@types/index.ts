@@ -1,5 +1,10 @@
 import { FormData } from '../form'
 
+export type Builder =
+  | IValidationConditionBuilder
+  | ITriggerConditionBuilder
+  | IViewBuilder
+
 export interface ITriggerCondition {
   isTriggered: (id: string, data: FormData) => boolean
   toJson(): StoredPlainObject
@@ -7,10 +12,7 @@ export interface ITriggerCondition {
 
 export interface ITriggerConditionBuilder {
   type: string
-  fromJson(
-    json: StoredPlainObject,
-    dataTriggerConditionBuilders?: ITriggerConditionBuilder[]
-  ): ITriggerCondition
+  fromJson(json: StoredPlainObject, builders?: Builder[]): ITriggerCondition
 }
 
 export interface IView {
@@ -24,7 +26,7 @@ export interface IView {
 
 export interface IViewBuilder {
   type: string
-  fromJson(json: StoredPlainObject, viewBuilders?: IViewBuilder[]): IView
+  fromJson(json: StoredPlainObject, builders?: Builder[]): IView
 }
 
 export interface IValidationCondition {
@@ -34,10 +36,7 @@ export interface IValidationCondition {
 
 export interface IValidationConditionBuilder {
   type: string
-  fromJson(
-    json: StoredPlainObject,
-    validationBuilders?: IValidationConditionBuilder[]
-  ): IValidationCondition
+  fromJson(json: StoredPlainObject, builders?: Builder[]): IValidationCondition
 }
 
 export interface ITranslatable {
